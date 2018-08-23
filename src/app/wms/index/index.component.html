@@ -12,6 +12,14 @@
     <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" class="fixed-sider">
 
       <ul nz-menu [nzTheme]="'light'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+        <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')">
+          <span>
+            <i class="anticon anticon-dashboard"></i>
+            <span class="nav-text">
+              Dashboard
+            </span>
+          </span>
+        </li>
         <li nz-submenu>
           <span title>
             <i class="anticon anticon-user"></i>
@@ -21,14 +29,16 @@
             <li nz-menu-item>
               <a routerLink="/404" routerLinkActive="active">404</a>
             </li>
-            <li nz-menu-item>Bill</li>
+            <li nz-menu-item routerLink="/wms/part" routerLinkActive="active" [nzSelected]="selected('/wms/part')">
+              <span class=" nav-text ">Part</span>
+            </li>
             <li nz-menu-item>Alex</li>
           </ul>
         </li>
         <li nz-submenu>
           <span title>
-            <i class="anticon anticon-team"></i>
-            <span class="nav-text">Team</span>
+            <i class="anticon anticon-team "></i>
+            <span class="nav-text ">Team</span>
           </span>
           <ul>
             <li nz-menu-item>Team 1</li>
@@ -37,8 +47,8 @@
         </li>
         <li nz-submenu>
           <span title>
-            <i class="anticon anticon-team"></i>
-            <span class="nav-text">Team</span>
+            <i class="anticon anticon-team "></i>
+            <span class="nav-text ">Team</span>
           </span>
           <ul>
             <li nz-menu-item>Team 1</li>
@@ -47,8 +57,8 @@
         </li>
         <li nz-submenu>
           <span title>
-            <i class="anticon anticon-team"></i>
-            <span class="nav-text">Team</span>
+            <i class="anticon anticon-team "></i>
+            <span class="nav-text ">Team</span>
           </span>
           <ul>
             <li nz-menu-item>Team 1</li>
@@ -57,18 +67,8 @@
         </li>
         <li nz-submenu>
           <span title>
-            <i class="anticon anticon-team"></i>
-            <span class="nav-text">Team</span>
-          </span>
-          <ul>
-            <li nz-menu-item>Team 1</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-team"></i>
-            <span class="nav-text">Team</span>
+            <i class="anticon anticon-team "></i>
+            <span class="nav-text ">Team</span>
           </span>
           <ul>
             <li nz-menu-item>Team 1</li>
@@ -77,25 +77,25 @@
         </li>
         <li nz-menu-item>
           <span>
-            <i class="anticon anticon-file"></i>
-            <span class="nav-text">File</span>
+            <i class="anticon anticon-file "></i>
+            <span class="nav-text ">File</span>
           </span>
         </li>
       </ul>
     </nz-sider>
-    <nz-content style="margin:0 16px;">
-      <nz-tabset>
-        <nz-tab *ngFor="let tab of tabs" [nzTitle]="tab">
+    <nz-content style="margin:0 16px; ">
+      <nz-tabset [nzSelectedIndex]="tabSelectIndex ">
+        <nz-tab *ngFor="let tab of tabs " [nzTitle]="tab.title " (nzClick)=navigate(tab.url)>
         </nz-tab>
       </nz-tabset>
-      <div style="padding:24px; background: #fff; min-height: 500px;">
+      <div style="padding:24px; background: #fff; min-height: 500px; ">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
 
   </nz-layout>
-  <nz-footer style="text-align: center;">Ant Design ©2017 Implement By Angular</nz-footer>
+  <nz-footer style="text-align: center; ">Ant Design ©2017 Implement By Angular</nz-footer>
 </nz-layout>
 <ng-template #trigger>
-  <i class="anticon anticon-up"></i>
+  <i class="anticon anticon-up "></i>
 </ng-template>
