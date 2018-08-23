@@ -10,22 +10,6 @@ import { from } from 'rxjs';
 export class IndexComponent implements OnInit {
 
   constructor(protected router: Router, protected route: ActivatedRoute) {
-    /// tab页的绑定
-    router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.selectedUrl = event.url;
-        from(this.tabs).pipe(
-          findIndex((o: any) => o.url === event.url)
-        ).subscribe((x) => {
-          if (x === -1) {
-            this.tabs.push({ title: route.firstChild.snapshot.data.title, url: event.url });
-            this.tabSelectIndex = this.tabs.length;
-          } else {
-            this.tabSelectIndex = x;
-          }
-        });
-      }
-    });
   }
   isCollapsed = false;
   triggerTemplate = null;
@@ -44,7 +28,22 @@ export class IndexComponent implements OnInit {
     this.triggerTemplate = this.customTrigger;
   }
   ngOnInit() {
-
+  /// tab页的绑定
+  this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      this.selectedUrl = event.url;
+      from(this.tabs).pipe(
+        findIndex((o: any) => o.url === event.url)
+      ).subscribe((x) => {
+        if (x === -1) {
+          this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: event.url });
+          this.tabSelectIndex = this.tabs.length;
+        } else {
+          this.tabSelectIndex = x;
+        }
+      });
+    }
+  });
   }
 
 }
