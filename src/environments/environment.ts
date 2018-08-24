@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  oDataBaseUrl: 'http://localhost:8000/api'
+  oDataBaseUrl: 'http://localhost:8000/odata'
 };
 
 /*

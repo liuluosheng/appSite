@@ -1,2 +1,2 @@
-<sf [schema]="schema" (formSubmit)="submit($event)" [formData]=model></sf>
+<sf #sf mode="edit" [schema]="schema" (formSubmit)="submit($event)" [formData]="model"></sf>
 <button (click)="getmodel();" nz-button>GetModel</button>

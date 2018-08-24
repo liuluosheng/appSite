@@ -1,27 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { DomainService } from '../../../../shared/services/injectable/DomainService';
-import { User } from '../../../../shared/services/dto/user_dto';
+import { TestUser } from '../../../../shared/services/dto/user_dto';
 import { HttpClient } from '@angular/common/http';
+import { ODataQueryService } from '../../../../shared/services/injectable/ODataQueryService';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less'],
-  providers: [DomainService]
+  providers: [ODataQueryService]
 })
 export class LoginComponent implements OnInit {
-  schema: any = {properties: {}};
-  model: any;
-  constructor(protected service: DomainService<User>, private http: HttpClient) {
+  schema: any = { properties: {} };
+  model: TestUser;
+  constructor(protected service: ODataQueryService<TestUser>, private http: HttpClient) {
   }
   getmodel() {
-    this.service.GetById('c7a66a0b-15c6-4678-8fcb-24f79de0cac7').subscribe(
-      s => {this.model = s; }
+    this.service.GetById('e20061e5-b518-491b-92bf-dfd86bf11c9f').subscribe(
+      s => {
+        this.model = s;
+      }
     );
+  }
+  submit(value: TestUser) {
+    this.service.Create(value).subscribe((re) => {
+
+    });
   }
   ngOnInit() {
     this.service.init('users');
-    this.http.get('http://localhost:8000/api/jsonschema/user')
+    this.http.get('http://localhost:8000/api/jsonschema/testuser')
       .subscribe((data: any) => {
         this.schema = data;
       });
