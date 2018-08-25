@@ -3,9 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './passport/login/login.component';
 import { Exception403Component } from './exception/exception403/exception403.component';
 import { Exception404Component } from './exception/exception404/exception404.component';
+import { IndexComponent } from '../wms/index/index.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  {path: '', component: IndexComponent},
   { path: 'login', component: LoginComponent },
   { path: '404', component: Exception404Component },
   { path: '403', component: Exception403Component },

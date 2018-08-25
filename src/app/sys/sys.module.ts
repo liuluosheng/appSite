@@ -7,12 +7,16 @@ import { Exception403Component } from './exception/exception403/exception403.com
 import { LoginComponent } from './passport/login/login.component';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { DelonFormModule } from '@delon/form';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @NgModule({
   imports: [
     CommonModule,
     NgZorroAntdModule,
     SysRoutingModule,
-    DelonFormModule
+    DelonFormModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     Exception404Component,
