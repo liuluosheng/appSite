@@ -1,2 +1,30 @@
-<sf #sf mode="edit" [schema]="schema" (formSubmit)="submit($event)" [formData]="model"></sf>
-<button (click)="getmodel();" nz-button>GetModel</button>
+<div nz-row nzType="flex" nzJustify="space-around" nzAlign="middle" class="container">
+  <div nz-col nzSpan="6">
+    <nz-spin [nzSpinning]="isSpinning" [nzDelay]="500">
+      <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="anticon anticon-user">
+              <input type="text" nz-input formControlName="userName" placeholder="Username">
+            </nz-input-group>
+            <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">请正确输入你的用户名!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-group nzPrefixIcon="anticon anticon-lock">
+              <input type="password" nz-input formControlName="password" placeholder="Password">
+            </nz-input-group>
+            <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请正确输入你的密码!</nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <a class="login-form-forgot" class="login-form-forgot">忘记密码？</a>
+            <button nz-button class="login-form-button" [nzType]="'primary'" [nzSize]='large'>登 录</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-spin>
+  </div>
+</div>
