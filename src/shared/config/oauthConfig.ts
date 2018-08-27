@@ -7,7 +7,9 @@ export const oAuthConfig: AuthConfig = {
     tokenEndpoint: 'http://localhost:5000/connect/token',
     userinfoEndpoint: 'http://localhost:5000/connect/userinfo',
     // URL of the SPA to redirect the user to after login
-    redirectUri: window.location.origin + '/index.html',
+    redirectUri: '',
+    logoutUrl: '/login',
+    loginUrl: '/login',
     oidc: false,
     // The SPA's id. The SPA is registerd with this id at the auth-server
     clientId: 'ro.client',

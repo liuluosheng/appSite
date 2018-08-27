@@ -6,6 +6,26 @@
     <button nz-button nzType="primary" [nzSize]="size" nzShape="circle" (click)="isCollapsed=!isCollapsed">
       <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed"></i>
     </button>
+    <div class="push-right options">
+      <nz-avatar nzText="USER"></nz-avatar>
+      <nz-dropdown [nzPlacement]="'bottomRight'">
+        <a nz-dropdown>
+          admin
+          <i class="anticon anticon-down"></i>
+        </a>
+        <ul nz-menu nzSelectable>
+          <li nz-menu-item>
+            <a>
+              <i class="anticon anticon-setting"></i> 设置</a>
+          </li>
+          <li nz-menu-divider></li>
+          <li nz-menu-item>
+            <a (click)="logout();">
+              <i class="anticon anticon-logout"></i> 退出登录</a>
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
   </nz-header>
 
   <nz-layout [style.margin-left]="!isCollapsed?'200px':'80px'" class="center">

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  oDataBaseUrl: 'http://localhost:8000/odata'
+  oDataBaseUrl: 'http://localhost:8000/odata',
+  oauthSendTokenUrl: ['http://localhost:8000/api', 'http://localhost:8000/odata']
 };
 
 /*
