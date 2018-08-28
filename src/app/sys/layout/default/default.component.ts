@@ -3,13 +3,13 @@ import { Router, NavigationStart, ActivatedRoute, ParamMap, NavigationEnd } from
 import { findIndex } from 'rxjs/operators';
 import { from } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { oAuthConfig } from '../../../shared/config/oauthConfig';
+import { oAuthConfig } from '../../../../shared/config/oauthConfig';
 @Component({
-  selector: 'app-index',
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.less']
+  selector: 'app-layout-default',
+  templateUrl: './default.component.html',
+  styleUrls: ['./default.component.less']
 })
-export class IndexComponent implements OnInit {
+export class DefaultLayoutComponent implements OnInit {
 
   constructor(protected router: Router,
     private authService: OAuthService,

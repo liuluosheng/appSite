@@ -9,6 +9,9 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { DelonFormModule } from '@delon/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { DefaultLayoutComponent } from './layout/default/default.component';
+import { IndexComponent } from './index/index.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -21,6 +24,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     Exception404Component,
     Exception403Component,
-    LoginComponent]
+    IndexComponent,
+    LoginComponent,
+    DefaultLayoutComponent]
 })
 export class SysModule { }
