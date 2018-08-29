@@ -8,6 +8,7 @@ import { IndexComponent } from './index/index.component';
 import { DashboardComponent } from '../wms/dashboard/dashboard.component';
 import { PartComponent } from '../wms/part/part.component';
 import { DefaultLayoutComponent } from './layout/default/default.component';
+import { OrdersComponent } from '../wms/orders/orders.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,8 @@ const routes: Routes = [
     path: 'wms', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: DashboardComponent, data: { title: 'dashboard' } },
-      { path: 'part', component: PartComponent, data: { title: 'part' } }
+      { path: 'part', component: PartComponent, data: { title: 'part' } },
+      { path: 'orders', component: OrdersComponent, data: { title: 'orders' } }
     ]
   },
   { path: '404', component: Exception404Component },

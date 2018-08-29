@@ -30,6 +30,17 @@ export class DefaultLayoutComponent implements OnInit {
   changeTrigger(): void {
     this.triggerTemplate = this.customTrigger;
   }
+  closeTab(index, tab): void {
+    this.tabs.splice(index, 1);
+    if (this.router.url === tab.url) {
+       if (this.tabs.length === 0) {
+        this.router.navigateByUrl('/');
+        this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: this.router.url });
+       } else {
+        this.router.navigateByUrl(this.tabs[this.tabs.length - 1].url);
+       }
+    }
+  }
   logout(): void {
     this.authService.logOut();
     this.router.navigateByUrl(oAuthConfig.logoutUrl);
@@ -39,15 +50,14 @@ export class DefaultLayoutComponent implements OnInit {
     this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: this.router.url });
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-
         from(this.tabs).pipe(
           findIndex((o: any) => o.url === event.url)
         ).subscribe((x) => {
           if (x === -1) {
-            alert(this.tabs[0].title);
+
             this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: event.url });
             this.tabSelectIndex = this.tabs.length;
-            alert(this.tabs[1].title);
+
           } else {
             this.tabSelectIndex = x;
           }

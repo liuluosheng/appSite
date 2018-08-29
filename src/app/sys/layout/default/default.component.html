@@ -26,6 +26,9 @@
             <li nz-menu-item routerLink="/wms/part" routerLinkActive="active" [nzSelected]="selected('/wms/part')">
               <span class=" nav-text ">Part</span>
             </li>
+            <li nz-menu-item routerLink="/wms/orders" routerLinkActive="active" [nzSelected]="selected('/wms/orders')">
+              <span class=" nav-text ">Orders</span>
+            </li>
             <li nz-menu-item>Alex</li>
           </ul>
         </li>
@@ -87,10 +90,10 @@
           </div>
           <div class="push-left">
             <nz-tabset [nzSelectedIndex]="tabSelectIndex " [nzTabBarGutter]="5" [nzSize]="large" [nzType]="'card'" class="tabs">
-              <nz-tab *ngFor="let tab of tabs " [nzTitle]="titleTemplate" (nzClick)=navigate(tab.url)>
+              <nz-tab *ngFor="let tab of tabs;let i=index; " [nzTitle]="titleTemplate" (nzClick)=navigate(tab.url)>
                 <ng-template #titleTemplate>
                   <div>{{ tab.title }}
-                    <i class="anticon anticon-close" (click)="closeTab(tab)"></i>
+                    <i class="anticon anticon-close" (click)="closeTab(i,tab)"></i>
                   </div>
                 </ng-template>
               </nz-tab>
