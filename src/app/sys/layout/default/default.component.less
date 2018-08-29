@@ -16,15 +16,44 @@
     margin: 16px;
 }
 
+.ant-layout {
+    height: 100%;
+    background-color: #fff;
+}
+
 @headerHeight: 64px;
 .fixed-head {
     position: fixed;
     width: 100%;
     left: 0;
     height: @headerHeight;
-    z-index: 999;
-    background-color: #1890ff;
+    z-index: 99;
     padding: 0;
+    overflow: hidden;
+    [nz-col] {
+        height: @headerHeight;
+        overflow: hidden;
+    }
+    .logo {
+        float: left;
+        width: 200px;
+        margin: 0;
+        height: @headerHeight;
+        background-color: #001529;
+    }
+}
+
+.tabs {
+    padding-top: 25px;
+    .ant-tabs-bar {
+        margin-bottom: 0;
+    }
+}
+
+.content {
+    background: #fff;
+    position: relative;
+    top: @headerHeight + 20px;
 }
 
 .options {
@@ -37,16 +66,27 @@
     }
 }
 
-.center {
-    margin-top: @headerHeight;
+.anticons {
+    height: 30px;
+    text-align: right;
+    i {
+        color: #fff;
+        font-size: 25px;
+        margin-right: 23px;
+        opacity: .8;
+        &:hover {
+            opacity: 1;
+        }
+    }
 }
 
 .fixed-sider {
-    overflow: auto;
-    height: 100vh;
+    overflow: hidden;
+    height: 100%;
     position: fixed;
+    padding-top: @headerHeight;
     left: 0;
-    background-color: #fff;
+    background-color: #001529;
     [nz-menu] .anticon {
         font-size: 20px;
     }
@@ -59,22 +99,5 @@
                 height: 60px
             }
         }
-    }
-}
-
-.logo {
-    width: 199px;
-    height: @headerHeight;
-    line-height: 70px;
-    float: left;
-    margin: 0;
-    margin-right: 10px;
-    .anticon {
-        font-size: 28px;
-        margin-left: 28px;
-    }
-    &.collapsed {
-        width: 79px;
-        overflow: hidden;
     }
 }

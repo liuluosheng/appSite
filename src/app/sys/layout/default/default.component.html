@@ -1,37 +1,11 @@
-<nz-layout>
-  <nz-header class="fixed-head">
-    <div class="logo" [class.collapsed]="isCollapsed">
-      <i class="anticon anticon-appstore"></i>
-    </div>
-    <button nz-button nzType="primary" [nzSize]="size" nzShape="circle" (click)="isCollapsed=!isCollapsed">
-      <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed"></i>
-    </button>
-    <div class="push-right options">
-      <nz-avatar nzText="USER"></nz-avatar>
-      <nz-dropdown [nzPlacement]="'bottomRight'">
-        <a nz-dropdown>
-          admin
-          <i class="anticon anticon-down"></i>
-        </a>
-        <ul nz-menu nzSelectable>
-          <li nz-menu-item>
-            <a>
-              <i class="anticon anticon-setting"></i> 设置</a>
-          </li>
-          <li nz-menu-divider></li>
-          <li nz-menu-item>
-            <a (click)="logout();">
-              <i class="anticon anticon-logout"></i> 退出登录</a>
-          </li>
-        </ul>
-      </nz-dropdown>
-    </div>
-  </nz-header>
+<nz-layout [style.margin-left]="!isCollapsed?'200px':'80px'">
 
-  <nz-layout [style.margin-left]="!isCollapsed?'200px':'80px'" class="center">
-    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" class="fixed-sider">
-
-      <ul nz-menu [nzTheme]="'light'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+  <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" class="fixed-sider">
+    <div class="anticons">
+      <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed" (click)="isCollapsed=!isCollapsed"></i>
+    </div>
+    <ng-scrollbar>
+      <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
         <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')">
           <span>
             <i class="anticon anticon-dashboard"></i>
@@ -102,20 +76,62 @@
           </span>
         </li>
       </ul>
-    </nz-sider>
-    <nz-content style="margin:0 16px; ">
-      <nz-tabset [nzSelectedIndex]="tabSelectIndex ">
-        <nz-tab *ngFor="let tab of tabs " [nzTitle]="tab.title " (nzClick)=navigate(tab.url)>
-        </nz-tab>
-      </nz-tabset>
-      <div style="padding:24px; background: #fff; min-height: 500px; ">
+    </ng-scrollbar>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="fixed-head">
+      <div nz-row>
+        <div nz-col nzSpan="18">
+          <div class="logo">
+          </div>
+          <div class="push-left">
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex " [nzTabBarGutter]="5" [nzSize]="large" [nzType]="'card'" class="tabs">
+              <nz-tab *ngFor="let tab of tabs " [nzTitle]="titleTemplate" (nzClick)=navigate(tab.url)>
+                <ng-template #titleTemplate>
+                  <div>{{ tab.title }}
+                    <i class="anticon anticon-close" (click)="closeTab(tab)"></i>
+                  </div>
+                </ng-template>
+              </nz-tab>
+            </nz-tabset>
+          </div>
+        </div>
+        <div nz-col nzSpan="6">
+          <div class="push-right options">
+            <nz-avatar nzText="USER"></nz-avatar>
+            <nz-dropdown [nzPlacement]="'bottomRight'">
+              <a nz-dropdown>
+                admin
+                <i class="anticon anticon-down"></i>
+              </a>
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item>
+                  <a>
+                    <i class="anticon anticon-setting"></i> 设置</a>
+                </li>
+                <li nz-menu-divider></li>
+                <li nz-menu-item>
+                  <a (click)="logout();">
+                    <i class="anticon anticon-logout"></i> 退出登录</a>
+                </li>
+              </ul>
+            </nz-dropdown>
+          </div>
+        </div>
+      </div>
+
+
+    </nz-header>
+    <nz-content style="margin:0 16px; height: 100%; ">
+      <div class="content">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
-
+    <nz-footer style="text-align: center;">Ant Design ©2017 Implement By Angular</nz-footer>
   </nz-layout>
-  <nz-footer style="text-align: center; ">Ant Design ©2017 Implement By Angular</nz-footer>
 </nz-layout>
+
 <ng-template #trigger>
   <i class="anticon anticon-up "></i>
 </ng-template>

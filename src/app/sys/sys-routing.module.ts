@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: '', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: IndexComponent }
+      { path: '', component: IndexComponent, data: { title: '首页' } }
     ]
 
   },

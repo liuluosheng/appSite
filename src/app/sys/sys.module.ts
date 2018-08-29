@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DefaultLayoutComponent } from './layout/default/default.component';
 import { IndexComponent } from './index/index.component';
-
+import { ScrollbarModule } from 'ngx-scrollbar';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,6 +20,7 @@ import { IndexComponent } from './index/index.component';
     DelonFormModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollbarModule
   ],
   declarations: [
     Exception404Component,
