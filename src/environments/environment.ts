@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   oDataBaseUrl: 'http://localhost:8000/odata',
+  jsonSchemaUrl: 'http://localhost:8000/api/jsonschema/',
   oauthSendTokenUrl: ['http://localhost:8000/api', 'http://localhost:8000/odata']
 };
 

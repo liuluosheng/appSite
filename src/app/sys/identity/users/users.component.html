@@ -2,9 +2,22 @@
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)" (nzPageSizeChange)="getpage(pageindex,$event)">
   <thead>
     <tr>
-      <th nzWidth=" 150px ">Name</th>
-      <th nzWidth="150px ">Area</th>
+      <th >Name</th>
+      <th>Area</th>
       <th>Position</th>
+      <th nzWidth="100px" nzRight="0px" class="text-center actions"> <nz-dropdown [nzPlacement]="'bottomRight'">
+        <a nz-dropdown>
+            <strong><i class="anticon anticon-ellipsis"></i></strong>
+        </a>
+        <ul nz-menu>
+          <li nz-menu-item>
+            <a (click)="create(createContent)"><i class="anticon anticon-addfile"></i>新建</a>
+          </li>
+          <li nz-menu-item>
+            <a><i class="anticon anticon-profile"></i>选择列...</a>
+          </li>
+        </ul>
+      </nz-dropdown></th>
     </tr>
   </thead>
   <tbody>
@@ -12,6 +25,27 @@
       <td>{{data.Name}}</td>
       <td>{{data.Area}}</td>
       <td>{{data.Position}}</td>
+      <td nzWidth="100px" nzRight="0px" class="text-center actions">
+          <nz-dropdown [nzPlacement]="'bottomRight'">
+              <a nz-dropdown>
+                  <strong><i class="anticon anticon-ellipsis"></i></strong>
+              </a>
+              <ul nz-menu>
+                <li nz-menu-item>
+                  <a><i class="anticon anticon-delete"></i>删除</a>
+                </li>
+                <li nz-menu-item>
+                  <a><i class="anticon anticon-edit"></i>编辑</a>
+                </li>
+                <li nz-menu-divider></li>
+                <li nz-menu-item nzDisabled>3rd menu item</li>
+              </ul>
+            </nz-dropdown>
+      </td>
     </tr>
   </tbody>
 </nz-table>
+<ng-template #createContent>
+  <sf #sf mode="edit" [schema]="schema"  button="none" autocomplete="off">
+  </sf>
+</ng-template>
