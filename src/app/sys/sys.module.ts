@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DefaultLayoutComponent } from './layout/default/default.component';
 import { IndexComponent } from './index/index.component';
 import { ScrollbarModule } from 'ngx-scrollbar';
+import { UsersComponent } from './identity/users/users.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -27,6 +28,7 @@ import { ScrollbarModule } from 'ngx-scrollbar';
     Exception403Component,
     IndexComponent,
     LoginComponent,
-    DefaultLayoutComponent]
+    DefaultLayoutComponent,
+    UsersComponent]
 })
 export class SysModule { }

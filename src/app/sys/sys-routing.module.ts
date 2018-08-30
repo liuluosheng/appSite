@@ -9,14 +9,22 @@ import { DashboardComponent } from '../wms/dashboard/dashboard.component';
 import { PartComponent } from '../wms/part/part.component';
 import { DefaultLayoutComponent } from './layout/default/default.component';
 import { OrdersComponent } from '../wms/orders/orders.component';
+import { UsersComponent } from './identity/users/users.component';
 
 const routes: Routes = [
   {
     path: '', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: IndexComponent, data: { title: '首页' } }
+      { path: '', component: IndexComponent, data: { title: 'index' } }
     ]
 
+  },
+
+  {
+    path: 'identity', component: DefaultLayoutComponent, canActivate: [AuthGuard],
+    children: [
+      { path: 'users', component: UsersComponent, data: { title: 'users' } }
+    ]
   },
   { path: 'login', component: LoginComponent },
   {

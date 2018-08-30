@@ -19,6 +19,7 @@
 .ant-layout {
     height: 100%;
     background-color: #fff;
+    overflow: hidden;
 }
 
 @headerHeight: 64px;
@@ -54,6 +55,8 @@
     background: #fff;
     position: relative;
     top: @headerHeight + 20px;
+    height: ~"calc(100% - 100px)";
+    overflow: auto;
 }
 
 .options {

@@ -33,12 +33,12 @@ export class DefaultLayoutComponent implements OnInit {
   closeTab(index, tab): void {
     this.tabs.splice(index, 1);
     if (this.router.url === tab.url) {
-       if (this.tabs.length === 0) {
+      if (this.tabs.length === 0) {
         this.router.navigateByUrl('/');
         this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: this.router.url });
-       } else {
+      } else {
         this.router.navigateByUrl(this.tabs[this.tabs.length - 1].url);
-       }
+      }
     }
   }
   logout(): void {
@@ -47,21 +47,16 @@ export class DefaultLayoutComponent implements OnInit {
   }
   ngOnInit() {
     /// tab页的绑定
-    this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: this.router.url });
+    this.tabs = [...this.tabs, { title: this.route.firstChild.snapshot.data.title, url: this.router.url }];
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        from(this.tabs).pipe(
-          findIndex((o: any) => o.url === event.url)
-        ).subscribe((x) => {
-          if (x === -1) {
-
-            this.tabs.push({ title: this.route.firstChild.snapshot.data.title, url: event.url });
-            this.tabSelectIndex = this.tabs.length;
-
-          } else {
-            this.tabSelectIndex = x;
-          }
-        });
+        const i = this.tabs.findIndex((n) => n.url === event.url);
+        if (i === -1) {
+          this.tabs = [...this.tabs, { title: this.route.firstChild.snapshot.data.title, url: event.url }];
+          this.tabSelectIndex = this.tabs.length;
+        } else {
+          this.tabSelectIndex = i;
+        }
       }
     });
   }

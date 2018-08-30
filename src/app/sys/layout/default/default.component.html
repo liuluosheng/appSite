@@ -35,10 +35,10 @@
         <li nz-submenu>
           <span title>
             <i class="anticon anticon-team "></i>
-            <span class="nav-text ">Team</span>
+            <span class="nav-text ">Identity</span>
           </span>
           <ul>
-            <li nz-menu-item>Team 1</li>
+            <li nz-menu-item routerLink="/identity/users" routerLinkActive="active" [nzSelected]="selected('/identity/users')">Users</li>
             <li nz-menu-item>Team 2</li>
           </ul>
         </li>
@@ -126,10 +126,14 @@
 
 
     </nz-header>
-    <nz-content style="margin:0 16px; height: 100%; ">
+    <nz-content style="margin:0 10px; height: 100%; ">
+
       <div class="content">
+
         <router-outlet></router-outlet>
+
       </div>
+
     </nz-content>
     <nz-footer style="text-align: center;">Ant Design ©2017 Implement By Angular</nz-footer>
   </nz-layout>

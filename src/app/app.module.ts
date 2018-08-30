@@ -19,6 +19,7 @@ import { ODataConfigurationFactory } from '../shared/config/odataConfig';
 import { environment } from '../environments/environment';
 import { DefaultInterceptor } from '../shared/services/interceptor/default.interceptor';
 import { AuthGuard } from '../shared/services/guard/auth.guard';
+import { ODataQueryService } from '../shared/services/injectable/ODataQueryService';
 
 
 
@@ -52,6 +53,7 @@ registerLocaleData(zh);
     { provide: ODataConfiguration, useClass: ODataConfigurationFactory },
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
     AuthGuard,
+    ODataQueryService,
     ODataServiceFactory],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,4 @@
-import { ODataServiceFactory, ODataService } from 'angular-odata-es5';
+import { ODataServiceFactory, ODataService, ODataPagedResult } from 'angular-odata-es5';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { first, switchMap } from 'rxjs/operators';
@@ -17,7 +17,9 @@ export class ODataQueryService<T> {
             first<T>()
         );
     }
-
+    public Page(pageindex: number, pagesize: number, orderby: string): Observable<ODataPagedResult<T>> {
+        return this.odata.Query().Skip((pageindex - 1) * pagesize).Top(pagesize).OrderBy(orderby).ExecWithCount();
+    }
     public Create(item: T): Observable<T> {
         return this.odata.Post<T>(item);
     }
