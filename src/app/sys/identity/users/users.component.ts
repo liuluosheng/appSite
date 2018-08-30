@@ -37,7 +37,6 @@ export class UsersComponent implements OnInit {
          this.dataSet = [data, ...this.dataSet];
          });
         } else {
-          this.sf.refreshSchema();
           this.notification.error('Error', '数据检验失败！');
           return false;
         }
