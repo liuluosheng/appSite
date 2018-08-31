@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { TestUser } from '../../../../shared/services/dto/user_dto';
-import { HttpClient } from '@angular/common/http';
+import { User } from '../../../../shared/services/dto/User';
+
 
 import { ODataQueryService } from '../../../../shared/services/injectable/ODataQueryService';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  Validators,
-  FormControl
+  Validators
 } from '@angular/forms';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
@@ -27,20 +25,13 @@ export class LoginComponent implements OnInit {
   validateForm: FormGroup;
   isSpinning = false;
   constructor(
-    protected service: ODataQueryService<TestUser>,
-    private http: HttpClient,
+    protected service: ODataQueryService<User>,
     private authService: OAuthService,
     private router: Router,
     private notification: NzNotificationService,
     private fb: FormBuilder) {
   }
-  getmodel() {
-    this.service.GetById('e20061e5-b518-491b-92bf-dfd86bf11c9f').subscribe(
-      s => {
-        this.model = s;
-      }
-    );
-  }
+
   submitForm(): void {
     for (const key in this.validateForm.controls) {
       if (this.validateForm.controls.hasOwnProperty(key)) {
@@ -63,10 +54,6 @@ export class LoginComponent implements OnInit {
   }
   ngOnInit() {
     this.service.init('users');
-    this.http.get('http://localhost:8000/api/jsonschema/testuser')
-      .subscribe((data: any) => {
-        this.schema = data;
-      });
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]]

@@ -1,6 +1,6 @@
 <nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" [nzSize]="small"
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
-  (nzPageSizeChange)="getpage(pageindex,$event)">
+  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading'>
   <thead>
     <tr>
       <th>Name</th>
@@ -24,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of nzTable.data ">
+    <tr *ngFor="let data of nzTable.data;let i=index; ">
       <td>{{data.Name}}</td>
       <td>{{data.Area}}</td>
       <td>{{data.Position}}</td>
@@ -41,7 +41,7 @@
               <a><i class="anticon anticon-delete"></i>删除</a>
             </li>
             <li nz-menu-item>
-              <a (click)=" modal(createContent,data,'编辑')"><i class="anticon anticon-edit"></i>编辑...</a>
+              <a (click)="updateItem=data; modal(createContent,data,'编辑',i)"><i class="anticon anticon-edit"></i>编辑...</a>
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item nzDisabled>3rd menu item</li>
@@ -52,6 +52,6 @@
   </tbody>
 </nz-table>
 <ng-template #createContent>
-  <sf #sf mode="edit" [schema]="schema" button="none" autocomplete="off">
+  <sf #sf mode="edit" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
   </sf>
 </ng-template>

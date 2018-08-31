@@ -11,7 +11,10 @@ export class DefaultInterceptor implements HttpInterceptor {
 
     }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return next.handle(req).pipe(
+        const currentReq = req.clone({
+            headers: req.headers.set('Access-Control-Allow-Origin', '*')
+          });
+        return next.handle(currentReq).pipe(
             catchError((error: HttpEvent<any>) => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
