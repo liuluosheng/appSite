@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { SFComponent } from '@delon/form';
-
+import { compare, deepClone, Operation } from 'fast-json-patch';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -26,22 +27,33 @@ export class UsersComponent implements OnInit {
     private modalService: NzModalService,
     private notification: NzNotificationService,
   ) { }
-  create(tplContent: TemplateRef<{}>) {
+
+
+  modal(tplContent: TemplateRef<{}>, item: TestUser, title: string) {
     this.modalService.create({
-      nzTitle: '新建',
+      nzTitle: title,
       nzContent: tplContent,
       nzOnOk: () => {
         this.sf.validator();
         if (this.sf.valid) {
-         this.service.Create(this.sf.value).subscribe((data) => {
-         this.dataSet = [data, ...this.dataSet];
-         });
+          let ob: Observable<TestUser>;
+          if (item == null) {
+            ob = this.service.Create(this.sf.value);
+          } else {
+            this.service.UpdateByPatch(compare(item, this.sf.value));
+          }
+          ob.subscribe((data) => {
+            this.dataSet = [data, ...this.dataSet];
+          });
         } else {
           this.notification.error('Error', '数据检验失败！');
           return false;
         }
 
       }
+    }).afterOpen.subscribe(() => {
+      console.log('Ok');
+      this.sf.formData = item;
     });
   }
   getpage(pageindex: number, pagesize: number) {
