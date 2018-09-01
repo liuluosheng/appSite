@@ -1,19 +1,19 @@
-<nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" [nzSize]="small"
+<nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" nzSize="middle"
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
   (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading'>
   <thead>
-    <tr>
-      <th>Name</th>
-      <th>Area</th>
-      <th>Position</th>
-      <th nzWidth="100px" nzRight="0px" class="text-center actions">
+    <tr class="thead">
+      <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+      <th *ngFor="let col of cloumns" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      <th nzWidth="80px" nzRight="0px" class="text-right actions">
+          <strong *ngIf='!showFilter' (click)="showFilter=true;"><i class="anticon anticon-filter"></i></strong> 
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
-            <strong><i class="anticon anticon-ellipsis"></i></strong>
+            <strong title='过滤'><i class="anticon anticon-ellipsis"></i></strong>
           </a>
           <ul nz-menu>
             <li nz-menu-item>
-              <a (click)="modal(createContent,null,'新建')"><i class="anticon anticon-addfile"></i>新建...</a>
+              <a (click)="updateItem=null;modal(createContent,null,'新建')"><i class="anticon anticon-addfile"></i>新建...</a>
             </li>
             <li nz-menu-item>
               <a><i class="anticon anticon-profile"></i>选择列...</a>
@@ -24,11 +24,41 @@
     </tr>
   </thead>
   <tbody>
+    <tr class="filter" *ngIf='showFilter'>
+    <td class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="showFilter=false;"></i></td>
+    <td *ngFor="let col of cloumns">
+        <ng-container *ngIf="col.type=='number'">
+            <nz-input-group nzCompact style="width:130px">
+                <input type="text" nz-input placeholder="Min" style="width:50px; text-align: center;">
+                <input type="text" disabled nz-input placeholder="~" style="width: 30px; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255);">
+                <input type="text" nz-input placeholder="Max" style="width: 50px; text-align: center; border-left: 0px;">
+              </nz-input-group>
+      </ng-container>
+      <ng-container *ngIf="col.type=='string'&& col.enum==null && col.format!='date-time'">
+          <input nz-input id="name" name="" >
+      </ng-container>
+      <ng-container *ngIf="col.type=='string'&& col.enum!=null && col.format!='date-time'">
+          <nz-select style='width: 120px;'  [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
+              <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>                     
+            </nz-select>
+      </ng-container>
+      <ng-container *ngIf="col.format=='date-time'">
+          <nz-range-picker [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
+      </ng-container>
+    </td>
+    <td class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="showFilter=false;"></i></td>
+    </tr>
     <tr *ngFor="let data of nzTable.data;let i=index; ">
-      <td>{{data.Name}}</td>
-      <td>{{data.Area}}</td>
-      <td>{{data.Position}}</td>
-      <td nzWidth="100px" nzRight="0px" class="text-center actions">
+      <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
+      <td *ngFor="let col of cloumns">
+        <ng-container *ngIf="col.format==null">
+              {{data[col.name]}}
+        </ng-container>
+        <ng-container *ngIf="col.format=='date-time'">
+            {{data[col.name]|date:'yyyy-MM-dd HH:mm'}}
+        </ng-container>
+      </td>
+      <td nzWidth="80px" nzRight="0px" class="text-right actions">
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
             <strong><i class="anticon anticon-ellipsis"></i></strong>
@@ -52,6 +82,6 @@
   </tbody>
 </nz-table>
 <ng-template #createContent>
-  <sf #sf mode="edit" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
+  <sf #sf  [schema]="schema" button="none" autocomplete="off" [formData]='updateItem' >
   </sf>
 </ng-template>
