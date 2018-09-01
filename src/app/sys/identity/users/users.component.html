@@ -25,20 +25,20 @@
   </thead>
   <tbody>
     <tr class="filter" *ngIf='showFilter'>
-    <td class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="showFilter=false;"></i></td>
+    <td class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
     <td *ngFor="let col of cloumns">
         <ng-container *ngIf="col.type=='number'">
             <nz-input-group nzCompact style="width:130px">
-                <input type="text" nz-input placeholder="Min" style="width:50px; text-align: center;">
-                <input type="text" disabled nz-input placeholder="~" style="width: 30px; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255);">
-                <input type="text" nz-input placeholder="Max" style="width: 50px; text-align: center; border-left: 0px;">
+                <input  type="text" nz-input placeholder="Min" style="width:50px; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
+                <input  type="text" disabled nz-input placeholder="~" style="width: 30px; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255);">
+                <input  type="text" nz-input placeholder="Max" style="width: 50px; text-align: center; border-left: 0px;" (blur)="filter(col,'le',$event.target.value)">
               </nz-input-group>
       </ng-container>
       <ng-container *ngIf="col.type=='string'&& col.enum==null && col.format!='date-time'">
-          <input nz-input id="name" name="" >
+          <input nz-input id="name"  (blur)="filter(col,'contains',$event.target.value)">
       </ng-container>
       <ng-container *ngIf="col.type=='string'&& col.enum!=null && col.format!='date-time'">
-          <nz-select style='width: 120px;'  [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
+          <nz-select  style='width: 120px;'  [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose"(ngModelChange)="filter(col,'eq',$event)">
               <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>                     
             </nz-select>
       </ng-container>
@@ -46,7 +46,7 @@
           <nz-range-picker [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
       </ng-container>
     </td>
-    <td class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="showFilter=false;"></i></td>
+    <td class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
     </tr>
     <tr *ngFor="let data of nzTable.data;let i=index; ">
       <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
