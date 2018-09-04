@@ -57,7 +57,7 @@ export class UsersComponent implements OnInit {
     this.filters = [];
     this.getpage(this.pageindex, this.pagesize);
   }
-  filter(odataProperty: any, op: OdataOperard, value: string): void {
+  filter(odataProperty: any, op: OdataOperard, value: any): void {
     const lastFilterString = this.filters.map((o) => o.value ).join(` ${OdataOperard.And} `);
     this.filters = this.filters.filter((n) => n.name !== odataProperty.name || ( n.name === odataProperty.name && n.operard !== op));
     if (value) {
@@ -68,12 +68,24 @@ export class UsersComponent implements OnInit {
       case OdataOperard.LessThan:
       case OdataOperard.LessThanOrEqual:
       case OdataOperard.NotEquals:
+      if (odataProperty.format === 'date-time') {
+        this.filters = [...this.filters,
+          {name: odataProperty.name,
+           operard: OdataOperard.GreaterThanOrEqual,
+           value: `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} cast(${value[0]},Edm.DateTimeOffset)`},
+          {name: odataProperty.name,
+             operard: OdataOperard.LessThanOrEqual,
+             value: `${odataProperty.name} ${OdataOperard.LessThanOrEqual} cast(${value[1]},Edm.DateTimeOffset)`}
+       ];
+      } else {
       this.filters = [...this.filters, {
         name: odataProperty.name,
         operard: op,
-        value: odataProperty.enum ?
+        value:
+        odataProperty.enum ?
         `${odataProperty.name} ${op} '${value}'` :
         `${odataProperty.name} ${op} ${value}`}];
+      }
       break;
       case OdataOperard.Contains:
       this.filters = [...this.filters, {
@@ -90,6 +102,7 @@ export class UsersComponent implements OnInit {
      console.log(filterString);
   }
   sort(sortName: string, value: string): void {
+    if (!value) { return; }
     this.sortName = sortName;
     this.sortValue = value;
     for (const key in this.sortMap) {
@@ -138,7 +151,9 @@ export class UsersComponent implements OnInit {
   }
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
     this.loading = true;
-    this.service.Page(pageindex, pagesize, sort || 'CreatedDate', filter).subscribe((o) => {
+    this.pagesize = pagesize;
+    this.pageindex = pageindex;
+    this.service.Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
       this.loading = false;
