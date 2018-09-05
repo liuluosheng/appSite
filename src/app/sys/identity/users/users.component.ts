@@ -58,50 +58,59 @@ export class UsersComponent implements OnInit {
     this.getpage(this.pageindex, this.pagesize);
   }
   filter(odataProperty: any, op: OdataOperard, value: any): void {
-    const lastFilterString = this.filters.map((o) => o.value ).join(` ${OdataOperard.And} `);
-    this.filters = this.filters.filter((n) => n.name !== odataProperty.name || ( n.name === odataProperty.name && n.operard !== op));
+    const lastFilterString = this.filters.map((o) => o.value).join(` ${OdataOperard.And} `);
+    this.filters = this.filters.filter((n) => n.name !== odataProperty.name
+      || (n.name === odataProperty.name && n.operard !== op && odataProperty.format !== 'date-time'));
     if (value) {
-     switch (op) {
-      case OdataOperard.Equals:
-      case OdataOperard.GreaterThan:
-      case OdataOperard.GreaterThanOrEqual:
-      case OdataOperard.LessThan:
-      case OdataOperard.LessThanOrEqual:
-      case OdataOperard.NotEquals:
-      if (odataProperty.format === 'date-time') {
-        this.filters = [...this.filters,
-          {name: odataProperty.name,
-           operard: OdataOperard.GreaterThanOrEqual,
-           value:
-           `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} ${format(value[0])}`},
-          {name: odataProperty.name,
-           operard: OdataOperard.LessThanOrEqual,
-           value:
-           `${odataProperty.name} ${OdataOperard.LessThanOrEqual} ${format(value[1])}`}
-       ];
-      } else {
-      this.filters = [...this.filters, {
-        name: odataProperty.name,
-        operard: op,
-        value:
-        odataProperty.enum ?
-        `${odataProperty.name} ${op} '${value}'` :
-        `${odataProperty.name} ${op} ${value}`}];
+      switch (op) {
+        case OdataOperard.Equals:
+        case OdataOperard.GreaterThan:
+        case OdataOperard.GreaterThanOrEqual:
+        case OdataOperard.LessThan:
+        case OdataOperard.LessThanOrEqual:
+        case OdataOperard.NotEquals:
+          if (odataProperty.format === 'date-time') {
+            if (value.length !== 0) {
+              this.filters = [...this.filters,
+              {
+                name: odataProperty.name,
+                operard: OdataOperard.GreaterThanOrEqual,
+                value:
+                  `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} ${format(value[0])}`
+              },
+              {
+                name: odataProperty.name,
+                operard: OdataOperard.LessThanOrEqual,
+                value:
+                  `${odataProperty.name} ${OdataOperard.LessThanOrEqual} ${format(value[1])}`
+              }
+              ];
+            }
+          } else {
+            this.filters = [...this.filters, {
+              name: odataProperty.name,
+              operard: op,
+              value:
+                odataProperty.enum ?
+                  `${odataProperty.name} ${op} '${value}'` :
+                  `${odataProperty.name} ${op} ${value}`
+            }];
+          }
+          break;
+        case OdataOperard.Contains:
+          this.filters = [...this.filters, {
+            name: odataProperty.name,
+            operard: op,
+            value: `${op}(${odataProperty.name}, '${value}')`
+          }];
+          break;
       }
-      break;
-      case OdataOperard.Contains:
-      this.filters = [...this.filters, {
-        name: odataProperty.name,
-        operard: op,
-        value: `${op}(${odataProperty.name}, '${value}')`}];
-      break;
-     }
     }
-    const filterString = this.filters.map((o) => o.value ).join(` ${OdataOperard.And} `);
-    if (lastFilterString !== filterString  ) {
-    this.getpage(this.pageindex, this.pagesize, null, filterString );
+    const filterString = this.filters.map((o) => o.value).join(` ${OdataOperard.And} `);
+    if (lastFilterString !== filterString) {
+      this.getpage(this.pageindex, this.pagesize, null, filterString);
     }
-     console.log(filterString);
+    console.log(filterString);
   }
   sort(sortName: string, value: string): void {
     if (!value) { return; }
@@ -109,7 +118,7 @@ export class UsersComponent implements OnInit {
     this.sortValue = value;
     for (const key in this.sortMap) {
       if (this.sortMap.hasOwnProperty(key)) {
-        this.sortMap[ key ] = (key === sortName ? value : null);
+        this.sortMap[key] = (key === sortName ? value : null);
       }
     }
     this.getpage(this.pageindex, this.pagesize, `${sortName} ${this.sortValue.replace('end', '')}`);
@@ -138,8 +147,8 @@ export class UsersComponent implements OnInit {
             });
           } else {
             this.service.UpdateByPatch(compare(item, this.sf.value), item.Id).subscribe((data) => {
-             this.dataSet[rowIndex] = data.body;
-             this.loading = false;
+              this.dataSet[rowIndex] = data.body;
+              this.loading = false;
             });
           }
 
@@ -178,11 +187,11 @@ enum OdataOperard {
   Contains = 'contains',
   Equals = 'eq',
   GreaterThan = 'gt',
-  GreaterThanOrEqual= 'ge',
+  GreaterThanOrEqual = 'ge',
   NotEquals = 'ne',
   LessThan = 'lt',
   LessThanOrEqual = 'le',
-  And= 'and',
-  Or= 'or',
-  Not= 'not'
+  And = 'and',
+  Or = 'or',
+  Not = 'not'
 }
