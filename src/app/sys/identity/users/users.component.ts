@@ -6,7 +6,7 @@ import { environment } from '../../../../environments/environment';
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { SFComponent } from '@delon/form';
 import { compare } from 'fast-json-patch';
-
+import { format } from 'date-fns';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -72,10 +72,12 @@ export class UsersComponent implements OnInit {
         this.filters = [...this.filters,
           {name: odataProperty.name,
            operard: OdataOperard.GreaterThanOrEqual,
-           value: `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} cast(${value[0]},Edm.DateTimeOffset)`},
+           value:
+           `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} ${format(value[0])}`},
           {name: odataProperty.name,
-             operard: OdataOperard.LessThanOrEqual,
-             value: `${odataProperty.name} ${OdataOperard.LessThanOrEqual} cast(${value[1]},Edm.DateTimeOffset)`}
+           operard: OdataOperard.LessThanOrEqual,
+           value:
+           `${odataProperty.name} ${OdataOperard.LessThanOrEqual} ${format(value[1])}`}
        ];
       } else {
       this.filters = [...this.filters, {

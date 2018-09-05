@@ -11,6 +11,7 @@ export class DefaultInterceptor implements HttpInterceptor {
 
     }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
         const currentReq = req.clone({
             headers: req.headers.set('Access-Control-Allow-Origin', '*')
           });
