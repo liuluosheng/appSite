@@ -20,17 +20,20 @@ export class ODataQueryService<T extends EntityBase> {
     }
     public Page(pageindex: number, pagesize: number, orderby: string, filter?: string): Observable<ODataPagedResult<T>> {
         return this.odata.Query()
-        .Skip((pageindex - 1) * pagesize)
-        .Filter(filter)
-        .Top(pagesize)
-        .OrderBy(orderby)
-        .ExecWithCount();
+            .Skip((pageindex - 1) * pagesize)
+            .Filter(filter)
+            .Top(pagesize)
+            .OrderBy(orderby)
+            .ExecWithCount();
     }
     public Create(item: T): Observable<T> {
         return this.odata.Post(item);
     }
     public Update(item: T): Observable<T> {
         return this.odata.Put<T>(item, item.Id);
+    }
+    public Delete(key: any): Observable<HttpResponse<T>> {
+        return this.odata.Delete(key);
     }
     public UpdateByPatch(entity: any, key: any): Observable<HttpResponse<T>> {
         return this.odata.Patch(entity, key);
