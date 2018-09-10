@@ -13,7 +13,7 @@
           </a>
           <ul nz-menu>
             <li nz-menu-item>
-              <a (click)="updateItem=null;modal(createContent,null,'新建')"><i class="anticon anticon-addfile"></i>新建...</a>
+              <a (click)="updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</a>
             </li>
             <li nz-menu-item>
               <a><i class="anticon anticon-profile"></i>选择列...</a>
@@ -73,7 +73,7 @@
               <a><i class="anticon anticon-delete"></i>删除</a>
             </li>
             <li nz-menu-item>
-              <a (click)="updateItem=data; modal(createContent,data,'编辑',i)"><i class="anticon anticon-edit"></i>编辑...</a>
+              <a (click)="updateItem=data; visibleDrawer=true;"><i class="anticon anticon-edit"></i>编辑...</a>
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item nzDisabled>3rd menu item</li>
@@ -83,7 +83,15 @@
     </tr>
   </tbody>
 </nz-table>
-<ng-template #createContent>
-  <sf #sf [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
+
+<nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom':'53px' }" [nzMaskClosable]="false"
+  [nzWidth]="720" [nzVisible]="visibleDrawer" nzTitle="Create" (nzOnClose)="visibleDrawer=false;">
+  <sf #sf layout="vertical" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
+    <div class="footer">
+      <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
+      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="loading">确
+        定
+      </button>
+    </div>
   </sf>
-</ng-template>
+</nz-drawer>

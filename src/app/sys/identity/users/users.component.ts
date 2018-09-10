@@ -1,12 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ODataQueryService } from '../../../../shared/services/injectable/ODataQueryService';
 import { User } from '../../../../shared/services/dto/User';
-import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { SFComponent } from '@delon/form';
 import { compare } from 'fast-json-patch';
 import { format } from 'date-fns';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -15,10 +15,11 @@ import { format } from 'date-fns';
 export class UsersComponent implements OnInit {
   allChecked = false;
   indeterminate = false;
-  loading = true;
+  visibleDrawer = false;
+  loading = false;
   dataSet: any[];
   updateItem: any;
-  schema = { properties: {} };
+  schema = { properties: {}, ui: { grid: { span: 12, gutter: 10 } } };
   schemaType = 'employees';
   pageindex = 1;
   pagesize = 10;
@@ -29,8 +30,7 @@ export class UsersComponent implements OnInit {
   cloumns = [];
   filters = [];
   showFilter = false;
-  @ViewChild(SFComponent)
-  private sf: SFComponent;
+
   constructor(
     protected service: ODataQueryService<User>,
     private http: HttpClient,
@@ -132,34 +132,27 @@ export class UsersComponent implements OnInit {
       }
     }
   }
-  modal(tplContent: TemplateRef<{}>, item: User, title: string, rowIndex: number) {
-    this.modalService.create({
-      nzTitle: title,
-      nzContent: tplContent,
-      nzOnOk: () => {
-        this.sf.validator();
-        if (this.sf.valid) {
-          this.loading = true;
-          if (item == null) {
-            this.service.Create(this.sf.value).subscribe((data) => {
-              this.dataSet = [data, ...this.dataSet];
-              this.loading = false;
-            });
-          } else {
-            this.service.UpdateByPatch(compare(item, this.sf.value), item.Id).subscribe((data) => {
-              this.dataSet[rowIndex] = data.body;
-              this.loading = false;
-            });
-          }
+  save(item): void {
+    if (this.updateItem.Id == null) {
+      this.service.Create(item).subscribe((data) => {
+        this.dataSet = [data, ...this.dataSet];
+        this.loading = false;
+        this.visibleDrawer = false;
+      });
+    } else {
+      const apply = compare(this.updateItem, item);
+      if (apply.length === 0) { return; }
+      this.service.UpdateByPatch(apply, item.Id).subscribe((data) => {
+       const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
+        this.dataSet[rowIndex] = data.body;
+        this.loading = false;
+        this.visibleDrawer = false;
+      });
 
-        } else {
-          this.notification.error('Error', '数据检验失败！');
-          return false;
-        }
+    }
 
-      }
-    });
   }
+
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
     this.loading = true;
     this.pagesize = pagesize;
@@ -175,7 +168,7 @@ export class UsersComponent implements OnInit {
     this.service.init('employees');
     this.http.get(`${environment.jsonSchemaUrl}/${this.schemaType}`)
       .subscribe((data: any) => {
-        this.schema = data;
+        Object.assign(this.schema, data);
         this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);
