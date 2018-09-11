@@ -1,3 +1,12 @@
-<p>
-  schema-form works!
-</p>
+<form nz-form [formGroup]="validateForm"  (ngSubmit)="submit($event)">
+
+  <nz-form-item *ngFor="let name of names">
+    <nz-form-label [nzSpan]="layout=='horizontal'?8:null" nzRequired nzFor="note">{{name}}</nz-form-label>
+    <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
+      <input id="note" type="text" nz-input [formControlName]="name">
+      <nz-form-explain *ngIf="validateForm.get(name).dirty && validateForm.get(name).errors">Please input your username!</nz-form-explain>
+    </nz-form-control>
+  </nz-form-item>
+
+  <button nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
+</form>
