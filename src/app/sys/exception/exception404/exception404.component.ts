@@ -10,7 +10,7 @@ import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading'
   styleUrls: ['./exception404.component.less']
 })
 export class Exception404Component implements OnInit {
-  schema = { properties: {}, ui: {} };
+  schema: any;
   visible = false;
   constructor(private http: HttpClient, public loading: HttpLoading) { }
   choose(e): void {
