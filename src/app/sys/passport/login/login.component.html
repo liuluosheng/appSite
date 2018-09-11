@@ -1,6 +1,6 @@
 <div nz-row nzType="flex" nzJustify="space-around" nzAlign="middle" class="container">
   <div nz-col nzSpan="6">
-    <nz-spin [nzSpinning]="isSpinning" [nzDelay]="500">
+    <nz-spin [nzSpinning]="loading.value" [nzDelay]="500">
       <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-control>

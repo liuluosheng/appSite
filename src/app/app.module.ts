@@ -20,6 +20,7 @@ import { environment } from '../environments/environment';
 import { DefaultInterceptor } from '../shared/services/interceptor/default.interceptor';
 import { AuthGuard } from '../shared/services/guard/auth.guard';
 import { ODataQueryService } from '../shared/services/injectable/ODataQueryService';
+import { HttpLoading } from '../shared/services/injectable/HttpLoading';
 
 
 
@@ -52,6 +53,7 @@ registerLocaleData(zh);
     { provide: AuthConfig, useValue: oAuthConfig },
     { provide: ODataConfiguration, useClass: ODataConfigurationFactory },
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
+    { provide: HttpLoading, useClass: HttpLoading },
     AuthGuard,
     ODataQueryService,
     ODataServiceFactory],

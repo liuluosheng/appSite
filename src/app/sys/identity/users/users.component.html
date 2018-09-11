@@ -1,12 +1,12 @@
 <nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" nzSize="middle"
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
-  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading'>
+  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading.value'>
   <thead>
     <tr class="thead">
-      <th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+      <th nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
       <th *ngFor="let col of cloumns" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
       <th nzWidth="80px" nzRight="0px" class="text-right actions">
-        <strong *ngIf='!showFilter' (click)="showFilter=true;"><i class="anticon anticon-filter"></i></strong>
+        <i class="anticon anticon-filter" *ngIf='!showFilter' (click)="showFilter=true;"></i>
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
             <strong title='过滤'><i class="anticon anticon-ellipsis"></i></strong>
@@ -25,8 +25,8 @@
   </thead>
   <tbody>
     <tr class="filter" *ngIf='showFilter'>
-      <td class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
-      <td *ngFor="let col of cloumns">
+      <td nzLeft="0px" class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
+      <td *ngFor="let col of cloumns" style="width:130px">
         <ng-container *ngIf="col.type=='number'">
           <nz-input-group nzCompact style="width:130px">
             <input type="text" nz-input placeholder="Min" style="width:50px; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
@@ -48,10 +48,11 @@
           <nz-range-picker (ngModelChange)="filter(col,'ge',$event)" ngModel [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
         </ng-container>
       </td>
-      <td class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
+      <td nzWidth="80px" nzRight="0px" class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
     </tr>
     <tr *ngFor="let data of nzTable.data;let i=index; ">
-      <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
+      <td nzWidth="80px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
+        (nzCheckedChange)="refreshStatus($event)"></td>
       <td *ngFor="let col of cloumns">
         <ng-container *ngIf="col.format==null">
           {{data[col.name]}}
@@ -89,7 +90,7 @@
   <sf #sf layout="vertical" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
     <div class="footer">
       <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
-      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="loading">确
+      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="loading.value">确
         定
       </button>
     </div>

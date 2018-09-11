@@ -4,14 +4,15 @@ import {
     HttpParams, HttpUrlEncodingCodec,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap, delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { HttpLoading } from '../injectable/HttpLoading';
 
 
 @Injectable()
 export class DefaultInterceptor implements HttpInterceptor {
-    constructor(private router: Router, private notification: NzNotificationService) {
+    constructor(private router: Router, private notification: NzNotificationService, public loading: HttpLoading) {
 
     }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -21,13 +22,17 @@ export class DefaultInterceptor implements HttpInterceptor {
         const filter = req.params.get('$filter');
         if (filter != null) {
             cloneReq.params = new HttpParams({ encoder: new OdataFilterHttpUrlEncodingCodec() });
+            // OData Filter时，时间格式中的+号不编码的问题
             req.params.keys().forEach((value) => {
                 cloneReq.params = cloneReq.params.set(value, req.params.get(value).replace(/\+/g, '%2B'));
             });
         }
 
         const currentReq = req.clone(cloneReq);
+        this.loading.value = true;
         return next.handle(currentReq).pipe(
+            tap(() => { this.loading.value = false; }),
+
             catchError((error: HttpEvent<any>) => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
@@ -45,7 +50,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     }
 }
 
-// OData Filter时，时间格式中的+号重复编码的问题
+// OData Filter时，时间格式中的+号不编码的问题
 class OdataFilterHttpUrlEncodingCodec extends HttpUrlEncodingCodec {
     constructor() { super(); }
     encodeKey(key): string { return encodeURIComponent(key); }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { format } from 'date-fns';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
 
 @Component({
   selector: 'app-exception404',
@@ -11,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 export class Exception404Component implements OnInit {
   schema = { properties: {}, ui: {} };
   visible = false;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public loading: HttpLoading) { }
   choose(e): void {
     console.log(format(e[0]));
     console.log(format(e[1]));
@@ -28,6 +29,7 @@ export class Exception404Component implements OnInit {
       .subscribe((data: any) => {
         this.schema = data;
         this.schema.ui = { grid: { span: 12, gutter: 10 } };
+
       });
   }
 

@@ -3,10 +3,10 @@ import { ODataQueryService } from '../../../../shared/services/injectable/ODataQ
 import { User } from '../../../../shared/services/dto/User';
 import { environment } from '../../../../environments/environment';
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
-import { SFComponent } from '@delon/form';
 import { compare } from 'fast-json-patch';
 import { format } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
+import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -16,7 +16,7 @@ export class UsersComponent implements OnInit {
   allChecked = false;
   indeterminate = false;
   visibleDrawer = false;
-  loading = false;
+  // loading = false;
   dataSet: any[];
   updateItem: any;
   schema = { properties: {}, ui: { grid: { span: 12, gutter: 10 } } };
@@ -36,7 +36,10 @@ export class UsersComponent implements OnInit {
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
-  ) { }
+    public loading: HttpLoading
+  ) {
+    console.log(loading.value);
+  }
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -136,16 +139,14 @@ export class UsersComponent implements OnInit {
     if (this.updateItem.Id == null) {
       this.service.Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
-        this.loading = false;
         this.visibleDrawer = false;
       });
     } else {
       const apply = compare(this.updateItem, item);
       if (apply.length === 0) { return; }
       this.service.UpdateByPatch(apply, item.Id).subscribe((data) => {
-       const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
+        const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
-        this.loading = false;
         this.visibleDrawer = false;
       });
 
@@ -154,13 +155,11 @@ export class UsersComponent implements OnInit {
   }
 
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
-    this.loading = true;
     this.pagesize = pagesize;
     this.pageindex = pageindex;
     this.service.Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
-      this.loading = false;
       this.refreshStatus();
     });
   }

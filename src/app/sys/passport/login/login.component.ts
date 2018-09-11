@@ -11,6 +11,7 @@ import {
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class LoginComponent implements OnInit {
     private authService: OAuthService,
     private router: Router,
     private notification: NzNotificationService,
+    public loading: HttpLoading,
     private fb: FormBuilder) {
   }
 

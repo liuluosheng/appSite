@@ -3,14 +3,15 @@
 </p>
 <nz-range-picker [nzFormat]="dateFormat" [ngModel]="selectDate" (ngModelChange)="choose($event)"></nz-range-picker>
 <br>
-<button (click)="open();" nz-button>Show</button>
+{{loading.value}}
+<button (click)="open();" nz-button [nzLoading]="loading.value">Show</button>
 
 <nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom':'53px' }" [nzMaskClosable]="false"
   [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
   <sf #sf layout="vertical" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
     <div class="footer">
       <button nz-button type="button" (click)="close()">取 消</button>
-      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="http.loading">确
+      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid">确
         定</button>
     </div>
   </sf>

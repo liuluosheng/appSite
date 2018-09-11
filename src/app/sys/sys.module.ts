@@ -13,6 +13,7 @@ import { DefaultLayoutComponent } from './layout/default/default.component';
 import { IndexComponent } from './index/index.component';
 import { ScrollbarModule } from 'ngx-scrollbar';
 import { UsersComponent } from './identity/users/users.component';
+import { SchemaFormComponent } from './components/schema-form/schema-form.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -29,6 +30,7 @@ import { UsersComponent } from './identity/users/users.component';
     IndexComponent,
     LoginComponent,
     DefaultLayoutComponent,
-    UsersComponent]
+    UsersComponent,
+    SchemaFormComponent]
 })
 export class SysModule { }
