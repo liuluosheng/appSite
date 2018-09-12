@@ -35,17 +35,19 @@
               (blur)="filter(col,'le',$event.target.value)">
           </nz-input-group>
         </ng-container>
-        <ng-container *ngIf="col.type=='string'&& col.enum==null && col.format!='date-time'">
-          <input nz-input id="name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off">
-        </ng-container>
-        <ng-container *ngIf="col.type=='string'&& col.enum!=null && col.format!='date-time'">
-          <nz-select style='width: 120px;' [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose"
-            (ngModelChange)="filter(col,'eq',$event)">
-            <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
-          </nz-select>
-        </ng-container>
-        <ng-container *ngIf="col.format=='date-time'">
-          <nz-range-picker (ngModelChange)="filter(col,'ge',$event)" ngModel [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
+        <ng-container *ngIf="col.type=='string'">
+          <ng-container *ngIf="col.enum">
+            <nz-select style='width: 120px;' [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose"
+              (ngModelChange)="filter(col,'eq',$event)">
+              <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
+            </nz-select>
+          </ng-container>
+          <ng-container *ngIf="!col.enum">
+            <input nz-input id=" name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off">
+          </ng-container>
+          <ng-container *ngIf="col.format=='date-time'">
+            <nz-range-picker (ngModelChange)="filter(col,'ge',$event)" ngModel [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
+          </ng-container>
         </ng-container>
       </td>
       <td nzWidth="80px" nzRight="0px" class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
