@@ -1,7 +1,15 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submit($event)" nz-row [nzGutter]='8' autocomplete="off">
+<form nz-form [nzLayout]="layout" [formGroup]="validateForm" (ngSubmit)="submit($event)" nz-row [nzGutter]='8'
+  autocomplete="off">
   <div *ngFor="let item of schema;" nz-col [nzSpan]="cols">
     <nz-form-item>
-      <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required" nzFor="note">{{item.title}}</nz-form-label>
+      <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
+        <span>
+          {{item.title}}
+          <nz-tooltip [nzTitle]="item.description" *ngIf="item.description">
+            <i nz-tooltip class="anticon anticon-question-circle-o"></i>
+          </nz-tooltip>
+        </span>
+      </nz-form-label>
       <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
         <ng-container *ngIf="item.type=='string' ">
           <ng-container *ngIf="item.format=='date-time' ">
@@ -17,10 +25,13 @@
           </ng-container>
         </ng-container>
         <ng-container *ngIf="item.type=='number'">
-          <nz-input-number [formControlName]="item.name" [nzMin]="1" [nzMax]="10" [nzStep]="1"></nz-input-number>
+          <nz-input-number [formControlName]="item.name" [nzMin]="item.minimum" [nzMax]="item.maximum" [nzStep]="1"></nz-input-number>
         </ng-container>
-        <nz-form-explain *ngIf="validateForm.get(item.name).dirty && validateForm.get(item.name).errors">
-          Please input your username!
+        <nz-form-explain *ngIf="validateForm.get(item.name)?.dirty && validateForm.get(item.name)?.errors">
+          <span *ngIf="validateForm.get(item.name).errors['required']">必填项</span>
+          <span *ngIf="validateForm.get(item.name).errors['pattern']">格式不正确</span>
+          <span *ngIf="validateForm.get(item.name).errors['maxlength']">{{"长度不能超过"+item.maxLength+"个字符"}}</span>
+          <span *ngIf="validateForm.get(item.name).errors['minlength']">{{"长度不能小于"+item.minLength+"个字符"}}</span>
         </nz-form-explain>
       </nz-form-control>
     </nz-form-item>

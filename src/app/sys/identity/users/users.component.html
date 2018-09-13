@@ -89,12 +89,13 @@
 
 <nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom':'53px' }" [nzMaskClosable]="false"
   [nzWidth]="720" [nzVisible]="visibleDrawer" nzTitle="Create" (nzOnClose)="visibleDrawer=false;">
-  <sf #sf layout="vertical" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'>
-    <div class="footer">
-      <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
-      <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="loading.value">确
-        定
-      </button>
-    </div>
-  </sf>
+  <app-schema-form [data]='updateItem' [schema]="schema"></app-schema-form>
+  <!--  <sf #sf layout="vertical" [schema]="schema" button="none" autocomplete="off" [formData]='updateItem'> 
+  <div class="footer">
+    <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
+    <button nz-button type="submit" [nzType]="'primary'" (click)="save(sf.value)" [disabled]="!sf.valid" [nzLoading]="loading.value">确
+      定
+    </button>
+  </div>
+  </sf>-->
 </nz-drawer>

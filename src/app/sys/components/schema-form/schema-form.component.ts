@@ -14,8 +14,7 @@ export class SchemaFormComponent implements OnInit {
   layout: 'horizontal' | 'vertical' = 'vertical';
   cols: 24 | 12 | 8 = 12; // 布局的列数： 24表示1列，12表示2列，8表示3列
   private _schema: any;
-  names: any[];
-
+  private _data: any = {};
   @Input()
   set schema(value: any) {
     if (value) {
@@ -29,26 +28,38 @@ export class SchemaFormComponent implements OnInit {
     }
   }
   @Input()
-  data: any = {};
+  set data(value: any) {
+    this._data = value;
+  }
 
   validateForm: FormGroup = new FormGroup({});
   constructor(private fb: FormBuilder) { }
 
   submit(event) {
+    Object.keys(this.validateForm.controls).forEach((i) => {
+      this.validateForm.controls[i].markAsDirty();
+      this.validateForm.controls[i].updateValueAndValidity();
+    });
     console.log(this.validateForm.value);
   }
   initValidateForm() {
     const controls: any = {};
-    this.names = Object.keys(this._schema.properties);
-    this.names.forEach((key) => {
+
+    this.schema.forEach((item) => {
       let validators = [];
-      if (this._schema.required.findIndex((v) => v === key) !== -1) {
+      if (item.required) {
         validators = [...validators, Validators.required];
       }
-      if (this._schema.properties[key].pattern) {
-        validators = [...validators, Validators.pattern(this._schema.properties[key].pattern)];
+      if (item.pattern) {
+        validators = [...validators, Validators.pattern(item.pattern)];
       }
-      controls[key] = [this.data[key], validators];
+      if (item.minLength) {
+        validators = [...validators, Validators.minLength(item.minLength)];
+      }
+      if (item.maxLength) {
+        validators = [...validators, Validators.maxLength(item.maxLength)];
+      }
+      controls[item.name] = [this._data[item.name], validators];
     });
     this.validateForm = this.fb.group(controls);
     console.log(this.validateForm);
