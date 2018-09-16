@@ -19,7 +19,7 @@ export class UsersComponent implements OnInit {
   // loading = false;
   dataSet: any[];
   updateItem: any;
-  schema = { properties: {}, ui: { grid: { span: 12, gutter: 10 } } };
+  schema: any;
   schemaType = 'employees';
   pageindex = 1;
   pagesize = 10;
@@ -167,7 +167,8 @@ export class UsersComponent implements OnInit {
     this.service.init('employees');
     this.http.get(`${environment.jsonSchemaUrl}/${this.schemaType}`)
       .subscribe((data: any) => {
-        Object.assign(this.schema, data);
+        this.schema = data;
+        this.schema.ui = { grid: { span: 12, gutter: 10 } };
         this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);

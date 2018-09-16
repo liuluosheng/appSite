@@ -10,28 +10,27 @@ import {
   templateUrl: './schema-form.component.html',
   styleUrls: ['./schema-form.component.less']
 })
-export class SchemaFormComponent implements OnInit {
+export class SchemaFormComponent implements OnInit, OnChanges {
   layout: 'horizontal' | 'vertical' = 'vertical';
   cols: 24 | 12 | 8 = 12; // 布局的列数： 24表示1列，12表示2列，8表示3列
   private _schema: any;
-  private _data: any = {};
+  private _data: any;
   @Input()
   set schema(value: any) {
     if (value) {
-      this._schema = value;
-      this.initValidateForm();
+      this.initValidateForm(value);
     }
   }
   get schema() {
-    if (this._schema) {
-      return Object.keys(this._schema.properties).map((value) => this._schema.properties[value]);
-    }
+     return this._schema;
   }
   @Input()
-  set data(value: any) {
+  set formData(value: any) {
     this._data = value;
   }
-
+  get formData() {
+    return this._data || {};
+  }
   validateForm: FormGroup = new FormGroup({});
   constructor(private fb: FormBuilder) { }
 
@@ -42,10 +41,13 @@ export class SchemaFormComponent implements OnInit {
     });
     console.log(this.validateForm.value);
   }
-  initValidateForm() {
+  reset() {
+    this.validateForm.reset();
+  }
+  initValidateForm(schema?: any) {
     const controls: any = {};
-
-    this.schema.forEach((item) => {
+    const _props = schema ? Object.keys(schema.properties).map((value) => schema.properties[value]) : this._schema;
+    _props.forEach((item) => {
       let validators = [];
       if (item.required) {
         validators = [...validators, Validators.required];
@@ -59,15 +61,24 @@ export class SchemaFormComponent implements OnInit {
       if (item.maxLength) {
         validators = [...validators, Validators.maxLength(item.maxLength)];
       }
-      controls[item.name] = [this._data[item.name], validators];
+      controls[item.name] = [this.formData[item.name] , validators];
     });
     this.validateForm = this.fb.group(controls);
-    console.log(this.validateForm);
+    this._schema = _props;
+  }
+  updateFormData(item: any) {
+    Object.keys(this.validateForm.controls).forEach((key) => {
+      this.validateForm.controls[key].setValue(item[key]);
+    });
   }
   ngOnInit() {
 
   }
+  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+   Object.keys(changes).forEach((key) => {
+      if (key === 'formData' && changes[key].currentValue) {
+       this.updateFormData(changes[key].currentValue);
+      }
+   });
+  }
 }
-
-
-
