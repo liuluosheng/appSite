@@ -1,11 +1,11 @@
 <nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" nzSize="middle"
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
-  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading.value'>
+  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]='loading.value' >
   <thead>
     <tr class="thead">
-      <th nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
-      <th *ngFor="let col of cloumns" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
-      <th nzWidth="80px" nzRight="0px" class="text-right actions">
+      <th nzWidth="30px"  nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+      <th *ngFor="let col of cloumns" nzWidth="100px"  nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      <th nzWidth="40px"   class="text-right actions">
         <i class="anticon anticon-filter" *ngIf='!showFilter' (click)="showFilter=true;"></i>
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
@@ -26,18 +26,18 @@
   <tbody>
     <tr class="filter" *ngIf='showFilter'>
       <td nzLeft="0px" class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
-      <td *ngFor="let col of cloumns" style="width:130px">
+      <td *ngFor="let col of cloumns">
         <ng-container *ngIf="col.type=='number'">
-          <nz-input-group nzCompact style="width:130px">
-            <input type="text" nz-input placeholder="Min" style="width:50px; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
-            <input type="text" disabled nz-input placeholder="~" style="width: 30px; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255);">
-            <input type="text" nz-input placeholder="Max" style="width: 50px; text-align: center; border-left: 0px;"
+          <nz-input-group nzCompact style="min-width:100px;">
+            <input type="text" nz-input placeholder="Min" style="width:45%; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
+            <input type="text" disabled nz-input placeholder="~" style="width:10%; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255); padding:4px 0; text-align: center">
+            <input type="text" nz-input placeholder="Max" style="width:45%; text-align: center; border-left: 0px;"
               (blur)="filter(col,'le',$event.target.value)">
           </nz-input-group>
         </ng-container>
         <ng-container *ngIf="col.type=='string'">
           <ng-container *ngIf="col.format=='enum'">
-            <nz-select style='width: 120px;' [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose"
+            <nz-select style='width: 100%' [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose"
               (ngModelChange)="filter(col,'eq',$event)">
               <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
             </nz-select>
@@ -54,7 +54,7 @@
       <td nzWidth="80px" nzRight="0px" class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
     </tr>
     <tr *ngFor="let data of nzTable.data;let i=index; ">
-      <td nzWidth="80px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
+      <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
         (nzCheckedChange)="refreshStatus($event)"></td>
       <td *ngFor="let col of cloumns">
         <ng-container *ngIf="col.format!='date-time'">
