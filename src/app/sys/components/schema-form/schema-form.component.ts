@@ -13,7 +13,7 @@ import {
 export class SchemaFormComponent implements OnInit, OnChanges {
   layout: 'horizontal' | 'vertical' = 'vertical';
   cols: 24 | 12 | 8 = 12; // 布局的列数： 24表示1列，12表示2列，8表示3列
-  private _schema: any;
+  private _schema: any[];
   private _data: any;
   @Input()
   set schema(value: any) {
@@ -22,7 +22,13 @@ export class SchemaFormComponent implements OnInit, OnChanges {
     }
   }
   get schema() {
-     return this._schema;
+    if (this._schema) {
+      return {
+        text: this._schema.filter((n) => n.type === 'string' || n.type === 'enum' || n.type === 'number' || n.type === 'datetime'),
+        upload: this._schema.filter((n) => n.type === 'upload')
+      };
+    }
+    return {};
   }
   @Input()
   set formData(value: any) {
@@ -61,7 +67,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       if (item.maxLength) {
         validators = [...validators, Validators.maxLength(item.maxLength)];
       }
-      controls[item.name] = [this.formData[item.name] , validators];
+      controls[item.name] = [this.formData[item.name], validators];
     });
     this.validateForm = this.fb.group(controls);
     this._schema = _props;
@@ -74,11 +80,11 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   ngOnInit() {
 
   }
-  ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-   Object.keys(changes).forEach((key) => {
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+    Object.keys(changes).forEach((key) => {
       if (key === 'formData' && changes[key].currentValue) {
-       this.updateFormData(changes[key].currentValue);
+        this.updateFormData(changes[key].currentValue);
       }
-   });
+    });
   }
 }
