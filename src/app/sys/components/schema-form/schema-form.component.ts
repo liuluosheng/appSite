@@ -77,6 +77,23 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       this.validateForm.controls[key].setValue(item[key]);
     });
   }
+  fileUpload(event, schema): void {
+    const control = this.validateForm.controls[schema.name];
+    if (event.type === 'success') {
+      control.setValue(event.file.response.result);
+    }
+    if (event.type === 'removed') {
+      if (event.file.response.result === control.value) {
+        const c = event.fileList.length;
+        if (c !== 0) {
+          control.setValue(event.fileList[c - 1].response.result);
+        } else {
+          control.setValue(null);
+          console.log(control.valid);
+        }
+      }
+    }
+  }
   ngOnInit() {
 
   }
