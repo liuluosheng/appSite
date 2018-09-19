@@ -130,7 +130,6 @@ export class UsersComponent implements OnInit {
     for (const i in this.schema.properties) {
       if (this.schema.properties.hasOwnProperty(i)) {
         const props = this.schema.properties[i];
-        props.name = i;
         this.cloumns = [...this.cloumns, props];
       }
     }
