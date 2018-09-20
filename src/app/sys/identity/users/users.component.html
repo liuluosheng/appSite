@@ -87,7 +87,7 @@
 
 <nz-drawer [nzMaskClosable]="false"
   [nzWidth]="720" [nzVisible]="visibleDrawer" nzTitle="Create" (nzOnClose)="visibleDrawer=false;">
-  <app-schema-form [formData]='updateItem' [schema]="schema" #asp>
+  <app-schema-form [formData]='updateItem' [schema]="schema" (formSumbit)="save($event)" #asp>
     <div class="footer">
       <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
       <button nz-button type="submit" [nzType]="'primary'"  [nzLoading]="loading.value">确 定</button>

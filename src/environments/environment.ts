@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
+  apiUrl: 'http://localhost:8000',
   oDataBaseUrl: 'http://localhost:8000/odata',
   jsonSchemaUrl: 'http://localhost:8000/api/jsonschema',
+  // 可以自动上传token的url
   oauthSendTokenUrl: ['http://localhost:8000/api', 'http://localhost:8000/odata']
 };
 
