@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
     HttpInterceptor, HttpEvent, HttpHandler, HttpRequest, HttpErrorResponse,
-    HttpParams, HttpUrlEncodingCodec,
+    HttpParams, HttpUrlEncodingCodec, HttpResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, tap, delay } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { HttpLoading } from '../injectable/HttpLoading';
@@ -31,8 +31,11 @@ export class DefaultInterceptor implements HttpInterceptor {
         const currentReq = req.clone(cloneReq);
         this.loading.value = true;
         return next.handle(currentReq).pipe(
-            tap(() => { this.loading.value = false; }),
-
+            tap((v) => {
+                if (v instanceof HttpResponse ) {
+                    this.loading.value = false;
+                }
+                }),
             catchError((error: HttpEvent<any>) => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {

@@ -6,6 +6,7 @@ import {
 } from '@angular/forms';
 import { deepClone } from 'fast-json-patch/lib/core';
 import { environment } from '../../../../environments/environment';
+import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class SchemaFormComponent implements OnInit, OnChanges {
     return this._data || {};
   }
   @Output() formSumbit = new EventEmitter<any>();
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+   }
   /// 表单提交
   submit() {
     Object.keys(this.validateForm.controls).forEach((i) => {
