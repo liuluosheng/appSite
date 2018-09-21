@@ -1,7 +1,7 @@
 <p>
   exception404 works!
 </p>
-<nz-range-picker [nzFormat]="dateFormat" [ngModel]="selectDate" (ngModelChange)="choose($event)"></nz-range-picker>
+<nz-range-picker (ngModelChange)="choose($event)"></nz-range-picker>
 <br>
 {{loading.value}}
 <button (click)="open();" nz-button [nzLoading]="loading.value">Show</button>

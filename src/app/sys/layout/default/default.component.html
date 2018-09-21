@@ -89,7 +89,7 @@
           <div class="logo">
           </div>
           <div class="push-left">
-            <nz-tabset [nzSelectedIndex]="tabSelectIndex " [nzTabBarGutter]="5" [nzSize]="large" [nzType]="'card'" class="tabs">
+            <nz-tabset [nzSelectedIndex]="tabSelectIndex " [nzTabBarGutter]="5" nzSize="large" [nzType]="'card'" class="tabs">
               <nz-tab *ngFor="let tab of tabs;let i=index; " [nzTitle]="titleTemplate" (nzClick)=navigate(tab.url)>
                 <ng-template #titleTemplate>
                   <div>{{ tab.title }}
