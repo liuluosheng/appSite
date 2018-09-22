@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 export class Exception404Component implements OnInit {
   schema: any;
   visible = false;
+  selectedUser = {};
   constructor(private http: HttpClient) { }
   choose(e): void {
     console.log(format(e[0]));

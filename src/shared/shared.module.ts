@@ -4,11 +4,13 @@ import { SchemaFormComponent } from './components/schema-form/schema-form.compon
 import { SchemaTableComponent } from './components/schema-table/schema-table.component';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 const declare: any[] =
 [
   SchemaFormComponent,
-  SchemaTableComponent
+  SchemaTableComponent,
+  AutocompleteComponent
 ];
 @NgModule({
   imports: [

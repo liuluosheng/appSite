@@ -47,6 +47,7 @@ export class DefaultInterceptor implements HttpInterceptor {
                             break;
                     }
                 }
+                this.loading.value = false;
                 return of(error);
             })
         );

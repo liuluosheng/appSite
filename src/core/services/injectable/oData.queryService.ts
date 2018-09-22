@@ -13,6 +13,7 @@ export class ODataQueryService<T extends EntityBase> {
     public init(type: string) {
         this.odata = this.oDataService.CreateService<T>(type);
     }
+
     public GetById(id: any): Observable<T> {
         return this.odata.Get(id).Exec().pipe(
             switchMap((v: any) => v.value),
@@ -38,5 +39,8 @@ export class ODataQueryService<T extends EntityBase> {
     }
     public UpdateByPatch(entity: any, key: any): Observable<HttpResponse<T>> {
         return this.odata.Patch(entity, key);
+    }
+    public Query(filter?: string, top?: number) {
+      return this.odata.Query().Filter(filter).Top(top).Exec();
     }
 }

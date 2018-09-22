@@ -4,10 +4,11 @@ import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
 import { format } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
-import { User } from 'src/shared/dto/User';
 import { environment } from 'src/environments/environment';
 import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
 import { HttpLoading } from 'src/core/services/injectable/http.Loading';
+import { EntityBase } from 'src/shared/dto/EntityBase';
+import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class SchemaTableComponent implements OnInit {
  private showFilter = false;
 
   constructor(
-    protected service: ODataQueryService<User>,
+    protected service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
@@ -145,6 +146,7 @@ export class SchemaTableComponent implements OnInit {
     }
   }
   save(item): void {
+    this.service.init(this._schemaType);
     if (this.updateItem.Id == null) {
       this.service.Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
@@ -185,15 +187,4 @@ export class SchemaTableComponent implements OnInit {
 
 
 }
-enum OdataOperard {
-  Contains = 'contains',
-  Equals = 'eq',
-  GreaterThan = 'gt',
-  GreaterThanOrEqual = 'ge',
-  NotEquals = 'ne',
-  LessThan = 'lt',
-  LessThanOrEqual = 'le',
-  And = 'and',
-  Or = 'or',
-  Not = 'not'
-}
+

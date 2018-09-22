@@ -15,6 +15,7 @@ import { oAuthConfig } from '../core/config/oauthConfig';
 import { DelonFormModule } from '@delon/form';
 import { environment } from '../environments/environment';
 import { CoreModule } from '../core/core.module';
+
 registerLocaleData(zh);
 
 @NgModule({

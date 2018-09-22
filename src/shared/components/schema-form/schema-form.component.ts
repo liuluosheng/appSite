@@ -34,6 +34,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
         n.type === 'string' ||
         n.type === 'enum' ||
         n.type === 'number' ||
+        n.type === 'autocomplete' ||
         n.type === 'boolean' ||
         n.type === 'datetime'),
         upload: this._schema.filter((n) => n.type === 'upload')
