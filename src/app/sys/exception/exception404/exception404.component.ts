@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { format } from 'date-fns';
 import { environment } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
 
 @Component({
   selector: 'app-exception404',
@@ -12,7 +11,7 @@ import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading'
 export class Exception404Component implements OnInit {
   schema: any;
   visible = false;
-  constructor(private http: HttpClient, public loading: HttpLoading) { }
+  constructor(private http: HttpClient) { }
   choose(e): void {
     console.log(format(e[0]));
     console.log(format(e[1]));

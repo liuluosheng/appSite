@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { first, switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { EntityBase } from '../dto/EntityBase';
+import { EntityBase } from 'src/shared/dto/EntityBase';
+
 @Injectable()
 export class ODataQueryService<T extends EntityBase> {
     private odata: ODataService<T>;

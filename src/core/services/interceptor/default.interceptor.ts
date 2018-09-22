@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { HttpLoading } from '../injectable/HttpLoading';
+import { HttpLoading } from 'src/core/services/injectable/http.Loading';
 
 
 @Injectable()

@@ -1,12 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ODataQueryService } from '../../../../shared/services/injectable/ODataQueryService';
-import { User } from '../../../../shared/services/dto/User';
-import { environment } from '../../../../environments/environment';
+
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
 import { format } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
-import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
+import { User } from 'src/shared/dto/User';
+import { environment } from 'src/environments/environment';
+import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
+import { HttpLoading } from 'src/core/services/injectable/http.Loading';
+
 
 @Component({
   selector: 'app-schema-table',
