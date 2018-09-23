@@ -27,7 +27,7 @@
             </nz-select>
           </ng-container>
           <ng-container *ngIf="item.type=='autocomplete'">
-            <app-autocomplete [schemaType]="item.dataType" [search]="item.autocomplete.search" [labelProp]="item.autocomplete.label" [formControlName]="item.name" [placeHolder]="item.autocomplete.placeHolder"></app-autocomplete>
+            <app-autocomplete [schemaType]="item.dataType"  [search]="item.autocomplete.search" [labelProp]="item.autocomplete.label" [formControlName]="item.name" [placeHolder]="item.autocomplete.placeHolder"></app-autocomplete>
           </ng-container>
           <ng-container *ngIf="item.type=='upload'" >
             <nz-upload [nzAction]="item.upload.action"  [nzFileList]="fileUploadFileList(item)">

@@ -4,7 +4,7 @@ import {
     HttpParams, HttpUrlEncodingCodec, HttpResponse,
 } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, timeout, delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { HttpLoading } from 'src/core/services/injectable/http.Loading';
@@ -33,7 +33,7 @@ export class DefaultInterceptor implements HttpInterceptor {
         return next.handle(currentReq).pipe(
             tap((v) => {
                 if (v instanceof HttpResponse ) {
-                    this.loading.value = false;
+                        this.loading.value = false;
                 }
                 }),
             catchError((error: HttpEvent<any>) => {

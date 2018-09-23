@@ -13,6 +13,7 @@ import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 
 @Component({
   selector: 'app-schema-table',
+  providers: [HttpLoading],
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
@@ -36,7 +37,7 @@ export class SchemaTableComponent implements OnInit {
  private showFilter = false;
 
   constructor(
-    protected service: ODataQueryService<EntityBase>,
+    private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
@@ -148,14 +149,14 @@ export class SchemaTableComponent implements OnInit {
   save(item): void {
     this.service.init(this._schemaType);
     if (this.updateItem.Id == null) {
-      this.service.Create(item).subscribe((data) => {
+      this.service.init(this._schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
       });
     } else {
       const apply = compare(this.updateItem, item);
       if (apply.length === 0) { return; }
-      this.service.UpdateByPatch(apply, item.Id).subscribe((data) => {
+      this.service.init(this._schemaType).UpdateByPatch(apply, item.Id).subscribe((data) => {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
@@ -168,7 +169,7 @@ export class SchemaTableComponent implements OnInit {
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
     this.pagesize = pagesize;
     this.pageindex = pageindex;
-    this.service.Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
+    this.service.init(this._schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
       this.refreshStatus();

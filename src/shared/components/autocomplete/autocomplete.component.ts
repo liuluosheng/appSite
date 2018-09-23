@@ -21,14 +21,11 @@ import { NzSelectComponent } from 'ng-zorro-antd';
 export class AutocompleteComponent implements ControlValueAccessor, OnInit {
   @Input() schemaType: string; // 表示实体类
   @Input() labelProp: string; // 表示选择后显示在文本框中的属性
-  @Input() valueProp = 'Id'; // 表示选择后绑定的属性
   @Input() search: string; // 表示要按哪些属性来进行搜索
   @Input() placeHolder: string;
   @ViewChild(NzSelectComponent)
   private nzSelectComponent: NzSelectComponent ;
-  optionList: any[];
-  onChange: (value: string | string[]) => void = () => null;
-  onTouched: () => void = () => null;
+  optionList: any[] = [];
   get searchs() {
     return this.search.split(',');
   }
@@ -37,18 +34,23 @@ export class AutocompleteComponent implements ControlValueAccessor, OnInit {
     return this.searchs.map((key) => item[key]).join(' ');
   }
 
-
   constructor(
     protected service: ODataQueryService<EntityBase>,
     protected loading: HttpLoading) { }
   onSearch(value: string): void {
    const filters =  this.searchs.map((v) => `${OdataOperard.Contains}(${v}, '${value}')`).join(` ${OdataOperard.Or} `);
-   this.service.Query(filters, 20).subscribe((data) => {
+   this.service.init(this.schemaType).Query(filters, 20).subscribe((data) => {
      this.optionList = data;
    });
   }
   writeValue(obj: any): void {
     this.nzSelectComponent.writeValue(obj);
+    if (obj != null) {
+    this.service.init(this.schemaType).GetById(obj).subscribe((data) => {
+      this.optionList = [data];
+    });
+    }
+    console.log(obj);
   }
   registerOnChange(fn: any): void {
     this.nzSelectComponent.onChange = fn;
