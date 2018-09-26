@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd';
 import { AuthConfig } from 'angular-oauth2-oidc';
@@ -10,6 +10,7 @@ import { DefaultInterceptor } from './services/interceptor/default.interceptor';
 import { AuthGuard } from './services/guard/auth.guard';
 import { HttpLoading } from 'src/core/services/injectable/http.Loading';
 import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
+import { throwIfAlreadyLoaded } from './services/guard/module.import.guard';
 
 
 
@@ -27,5 +28,9 @@ import { ODataQueryService } from 'src/core/services/injectable/oData.QueryServi
     ODataQueryService,
     ODataServiceFactory],
 })
-/// CoreModule为服务定义模块 仅在AppModule模块中导入
-export class CoreModule { }
+/// CoreModule为服务定义模块 仅在AppModule模块中导入且仅允许导入一次
+export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    throwIfAlreadyLoaded(parentModule, 'CoreModule');
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -9,6 +9,7 @@ import { ODataQueryService } from 'src/core/services/injectable/oData.QueryServi
 import { HttpLoading } from 'src/core/services/injectable/http.Loading';
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { OdataOperard } from 'src/shared/const/odataOperard.enum';
+import { TableActionComponent } from './schema-table.action.component';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class SchemaTableComponent implements OnInit {
   private dataSet: any[];
   private updateItem: any;
   private schema: any;
-
+  private loading = true;
   private pageindex = 1;
   private pagesize = 10;
   private total: number;
@@ -34,14 +35,15 @@ export class SchemaTableComponent implements OnInit {
   private cloumns = [];
   private filters = [];
   private showFilter = false;
-
+  private rowActions: any[];
+  private tableActions: any[];
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
-    public loading: HttpLoading,
-    private viewContainer: ViewContainerRef
+    private viewContainer: ViewContainerRef,
+    private httpLoading: HttpLoading
   ) {
 
   }
@@ -50,7 +52,7 @@ export class SchemaTableComponent implements OnInit {
   set schemaType(value) {
     this._schemaType = value;
   }
-
+  @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -148,10 +150,12 @@ export class SchemaTableComponent implements OnInit {
     }
   }
   save(item): void {
+    this.loading = true;
     if (this.updateItem.Id == null) {
       this.service.init(this._schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
+        this.loading = false;
       });
     } else {
       const apply = compare(this.updateItem, item);
@@ -160,6 +164,7 @@ export class SchemaTableComponent implements OnInit {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
+        this.loading = false;
       });
 
     }
@@ -167,12 +172,14 @@ export class SchemaTableComponent implements OnInit {
   }
 
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
+    this.loading = true;
     this.pagesize = pagesize;
     this.pageindex = pageindex;
     this.service.init(this._schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
       this.refreshStatus();
+      this.loading = false;
     });
   }
   ngOnInit() {
@@ -183,6 +190,10 @@ export class SchemaTableComponent implements OnInit {
         this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);
+    /// 加载表格自定义操作
+    this.rowActions = this.actions
+      .filter((x) => x.type === 'row')
+      .map((v) => ({ name: v.name, icon: v.icon, handle: (row: any) => { } }));
   }
 
 
