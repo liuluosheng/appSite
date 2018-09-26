@@ -1,5 +1,4 @@
-<form nz-form [nzLayout]="layout" [formGroup]="validateForm" (ngSubmit)="submit($event)" 
-  autocomplete="off">
+<form nz-form [nzLayout]="layout" [formGroup]="validateForm" (ngSubmit)="submit()" autocomplete="off">
   <div nz-row [nzGutter]='8'>
     <div *ngFor="let item of schema.text;" nz-col [nzSpan]="cols">
       <nz-form-item>
@@ -26,18 +25,18 @@
               <nz-option *ngFor="let n of item.enum;" [nzLabel]="n" [nzValue]="n"></nz-option>
             </nz-select>
           </ng-container>
-          <ng-container *ngIf="item.type=='upload' " >
-            <nz-upload [nzAction]="item.upload.action"  [nzFileList]="fileUploadFileList(item)">
+          <ng-container *ngIf="item.type=='upload' ">
+            <nz-upload [nzAction]="item.upload.action" [nzFileList]="fileUploadFileList(item)">
               <button nz-button>
                 <i class="anticon anticon-upload"></i><span>{{item.upload.text}}</span>
               </button>
             </nz-upload>
           </ng-container>
-  
+
           <ng-container *ngIf="item.type=='number'">
             <nz-input-number [formControlName]="item.name" [nzMin]="item.minimum" [nzMax]="item.maximum" [nzStep]="1"></nz-input-number>
           </ng-container>
-  
+
           <nz-form-explain *ngIf="validateForm.get(item.name)?.dirty && validateForm.get(item.name)?.errors">
             <span *ngIf="validateForm.get(item.name).errors['required']">必填项</span>
             <span *ngIf="validateForm.get(item.name).errors['pattern']">格式不正确</span>
@@ -48,7 +47,7 @@
       </nz-form-item>
     </div>
   </div>
-  
+
   <nz-divider></nz-divider>
   <div *ngFor="let item of schema.upload;" nz-col>
     <nz-form-item>
@@ -62,7 +61,8 @@
       </nz-form-label>
       <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
         <ng-container *ngIf="item.type=='upload' ">
-          <nz-upload [nzAction]="item.upload.action"  [nzFileType]="item.upload.fileType" (nzChange)="fileUpload($event,item)" [nzFileList]="uploadFileList[item.name]" >
+          <nz-upload [nzAction]="item.upload.action" [nzFileType]="item.upload.fileType" (nzChange)="fileUpload($event,item)"
+            [nzFileList]="uploadFileList[item.name]">
             <button nz-button type="button">
               <i class="anticon anticon-upload"></i><span>{{item.upload.text}}</span>
             </button>
