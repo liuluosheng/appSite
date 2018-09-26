@@ -22,7 +22,7 @@ import { ODataQueryService } from 'src/core/services/injectable/oData.QueryServi
     { provide: AuthConfig, useValue: oAuthConfig },
     { provide: ODataConfiguration, useClass: ODataConfigurationFactory },
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
-    HttpLoading,
+    { provide: HttpLoading, useClass: HttpLoading },
     AuthGuard,
     ODataQueryService,
     ODataServiceFactory],

@@ -49,8 +49,9 @@ export class AutocompleteComponent implements ControlValueAccessor, OnInit {
     this.service.init(this.schemaType).GetById(obj).subscribe((data) => {
       this.optionList = [data];
     });
+    } else {
+    this.optionList = [];
     }
-    console.log(obj);
   }
   registerOnChange(fn: any): void {
     this.nzSelectComponent.onChange = fn;

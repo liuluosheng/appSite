@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -13,35 +13,35 @@ import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 
 @Component({
   selector: 'app-schema-table',
-  providers: [HttpLoading],
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
 export class SchemaTableComponent implements OnInit {
- private _schemaType: string;
- private allChecked = false;
- private indeterminate = false;
- private visibleDrawer = false;
- private dataSet: any[];
- private updateItem: any;
- private schema: any;
+  private _schemaType: string;
+  private allChecked = false;
+  private indeterminate = false;
+  private visibleDrawer = false;
+  private dataSet: any[];
+  private updateItem: any;
+  private schema: any;
 
- private pageindex = 1;
- private pagesize = 10;
- private total: number;
- private sortName: string = null;
- private sortValue: string = null;
- private sortMap = {};
- private cloumns = [];
- private filters = [];
- private showFilter = false;
+  private pageindex = 1;
+  private pagesize = 10;
+  private total: number;
+  private sortName: string = null;
+  private sortValue: string = null;
+  private sortMap = {};
+  private cloumns = [];
+  private filters = [];
+  private showFilter = false;
 
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
-    public loading: HttpLoading
+    public loading: HttpLoading,
+    private viewContainer: ViewContainerRef
   ) {
 
   }
@@ -50,6 +50,7 @@ export class SchemaTableComponent implements OnInit {
   set schemaType(value) {
     this._schemaType = value;
   }
+
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -57,7 +58,7 @@ export class SchemaTableComponent implements OnInit {
     this.indeterminate = (!allChecked) && (!allUnChecked);
   }
   transformUrl(url): string {
-   return `${environment.apiUrl}/${url}`;
+    return `${environment.apiUrl}/${url}`;
   }
   checkAll(value: boolean): void {
     this.dataSet.forEach(data => {
@@ -147,7 +148,6 @@ export class SchemaTableComponent implements OnInit {
     }
   }
   save(item): void {
-    this.service.init(this._schemaType);
     if (this.updateItem.Id == null) {
       this.service.init(this._schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
@@ -176,7 +176,6 @@ export class SchemaTableComponent implements OnInit {
     });
   }
   ngOnInit() {
-    this.service.init(this._schemaType);
     this.http.get(`${environment.jsonSchemaUrl}/${this._schemaType}`)
       .subscribe((data: any) => {
         this.schema = data;
