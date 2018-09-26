@@ -16,6 +16,10 @@
             <li nz-menu-item>
               <a (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</a>
             </li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item *ngFor="let x of tableActions">
+              <a (click)="x.open(nzTable.data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</a>
+            </li>
             <li nz-menu-item>
               <a><i class="anticon anticon-profile"></i>选择列...</a>
             </li>
@@ -86,7 +90,7 @@
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item *ngFor="let x of rowActions">
-              <a (click)=""><i class="anticon {{x.icon}}"></i>{{action.name}}</a>
+              <a (click)="x.open(data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</a>
             </li>
           </ul>
         </nz-dropdown>

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -17,7 +17,8 @@ import { TableActionComponent } from './schema-table.action.component';
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
-export class SchemaTableComponent implements OnInit {
+export class SchemaTableComponent implements OnInit, AfterContentInit {
+
   private _schemaType: string;
   private allChecked = false;
   private indeterminate = false;
@@ -42,7 +43,6 @@ export class SchemaTableComponent implements OnInit {
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
-    private viewContainer: ViewContainerRef,
     private httpLoading: HttpLoading
   ) {
 
@@ -190,12 +190,11 @@ export class SchemaTableComponent implements OnInit {
         this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);
-    /// 加载表格自定义操作
-    this.rowActions = this.actions
-      .filter((x) => x.type === 'row')
-      .map((v) => ({ name: v.name, icon: v.icon, handle: (row: any) => { } }));
   }
-
-
+  ngAfterContentInit(): void {
+    /// 加载表格自定义操作
+    this.rowActions = this.actions.filter(x => x.type === 'row');
+    this.tableActions = this.actions.filter(x => x.type === 'table');
+  }
 }
 

@@ -5,12 +5,14 @@ import { SchemaTableComponent } from './components/schema-table/schema-table.com
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { TableActionComponent } from './components/schema-table/schema-table.action.component';
 
 const declare: any[] =
 [
   SchemaFormComponent,
   SchemaTableComponent,
-  AutocompleteComponent
+  AutocompleteComponent,
+  TableActionComponent
 ];
 @NgModule({
   imports: [

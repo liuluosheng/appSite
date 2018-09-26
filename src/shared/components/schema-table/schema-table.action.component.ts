@@ -1,20 +1,22 @@
-import { Component, OnInit, ContentChild, TemplateRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ContentChild, TemplateRef, Input, Output, EventEmitter, ViewContainerRef } from '@angular/core';
 
 
 @Component({
     selector: 'app-table-action',
-    template: `<ng-content><ng-template></ng-template></ng-content>`
+    template: `<ng-content></ng-content>`
 })
 
 export class TableActionComponent implements OnInit {
-    @ContentChild(TemplateRef) content;
-    @Input() name = 'Not set Name';
+    @Input() name = '未定义名称';
     @Input() type: 'row' | 'table' = 'row';
-    @Input() show: 'modal' | 'drawer' = 'drawer';
     @Input() icon: string;
-    constructor() { }
-    open() {
-        // this.viewContainer.createEmbeddedView(this.addNewContent);
+    @Input() data: any;
+    @Input() visible = false;
+    constructor() {
+    }
+    open(data) {
+        this.data = data;
+        this.visible = true;
     }
     ngOnInit() { }
 }
