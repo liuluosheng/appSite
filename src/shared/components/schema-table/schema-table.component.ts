@@ -18,30 +18,29 @@ import { OdataOperard } from 'src/shared/const/odataOperard.enum';
   styleUrls: ['./schema-table.component.less']
 })
 export class SchemaTableComponent implements OnInit {
- private _schemaType: string;
- private allChecked = false;
- private indeterminate = false;
- private visibleDrawer = false;
- private dataSet: any[];
- private updateItem: any;
- private schema: any;
-
- private pageindex = 1;
- private pagesize = 10;
- private total: number;
- private sortName: string = null;
- private sortValue: string = null;
- private sortMap = {};
- private cloumns = [];
- private filters = [];
- private showFilter = false;
+  private _schemaType: string;
+  private allChecked = false;
+  private indeterminate = false;
+  private visibleDrawer = false;
+  private dataSet: any[];
+  private updateItem: any;
+  private schema: any;
+  private loading = true;
+  private pageindex = 1;
+  private pagesize = 10;
+  private total: number;
+  private sortName: string = null;
+  private sortValue: string = null;
+  private sortMap = {};
+  private cloumns = [];
+  private filters = [];
+  private showFilter = false;
 
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
-    private notification: NzNotificationService,
-    public loading: HttpLoading
+    private notification: NzNotificationService
   ) {
 
   }
@@ -50,6 +49,7 @@ export class SchemaTableComponent implements OnInit {
   set schemaType(value) {
     this._schemaType = value;
   }
+
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -57,7 +57,7 @@ export class SchemaTableComponent implements OnInit {
     this.indeterminate = (!allChecked) && (!allUnChecked);
   }
   transformUrl(url): string {
-   return `${environment.apiUrl}/${url}`;
+    return `${environment.apiUrl}/${url}`;
   }
   checkAll(value: boolean): void {
     this.dataSet.forEach(data => {
@@ -147,11 +147,12 @@ export class SchemaTableComponent implements OnInit {
     }
   }
   save(item): void {
-    this.service.init(this._schemaType);
+    this.loading = true;
     if (this.updateItem.Id == null) {
       this.service.init(this._schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
+        this.loading = false;
       });
     } else {
       const apply = compare(this.updateItem, item);
@@ -160,6 +161,7 @@ export class SchemaTableComponent implements OnInit {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
+        this.loading = false;
       });
 
     }
@@ -167,12 +169,14 @@ export class SchemaTableComponent implements OnInit {
   }
 
   getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
+    this.loading = true;
     this.pagesize = pagesize;
     this.pageindex = pageindex;
     this.service.init(this._schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
       this.refreshStatus();
+      this.loading = false;
     });
   }
   ngOnInit() {
