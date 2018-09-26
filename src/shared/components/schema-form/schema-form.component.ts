@@ -5,7 +5,8 @@ import {
   Validators
 } from '@angular/forms';
 import { deepClone } from 'fast-json-patch/lib/core';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
+
 
 
 @Component({
@@ -33,6 +34,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
         n.type === 'string' ||
         n.type === 'enum' ||
         n.type === 'number' ||
+        n.type === 'autocomplete' ||
         n.type === 'boolean' ||
         n.type === 'datetime'),
         upload: this._schema.filter((n) => n.type === 'upload')
@@ -48,7 +50,8 @@ export class SchemaFormComponent implements OnInit, OnChanges {
     return this._data || {};
   }
   @Output() formSumbit = new EventEmitter<any>();
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+   }
   /// 表单提交
   submit() {
     Object.keys(this.validateForm.controls).forEach((i) => {

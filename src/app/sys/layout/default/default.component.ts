@@ -3,7 +3,7 @@ import { Router, NavigationStart, ActivatedRoute, ParamMap, NavigationEnd } from
 import { findIndex } from 'rxjs/operators';
 import { from } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { oAuthConfig } from '../../../../shared/config/oauthConfig';
+import { oAuthConfig } from '../../../../core/config/oauthConfig';
 @Component({
   selector: 'app-layout-default',
   templateUrl: './default.component.html',

@@ -3,10 +3,12 @@
 </p>
 <nz-range-picker (ngModelChange)="choose($event)"></nz-range-picker>
 <br>
-{{loading.value}}
-<button (click)="open();" nz-button [nzLoading]="loading.value">Show</button>
+
+<button (click)="open();" nz-button>Show</button>
 
 <nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom':'53px' }" [nzMaskClosable]="false"
   [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
   <app-schema-form [schema]="schema"></app-schema-form>
 </nz-drawer>
+{{selectedUser | json}}
+<!-- <app-autocomplete  [(ngModel)]="selectedUser" schemaType="employees" search="Name,PhoneNumber" labelProp="Name" placeHolder="搜索用户名,联系电话"></app-autocomplete> -->

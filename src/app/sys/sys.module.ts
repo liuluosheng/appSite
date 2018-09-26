@@ -13,7 +13,7 @@ import { DefaultLayoutComponent } from './layout/default/default.component';
 import { IndexComponent } from './index/index.component';
 import { ScrollbarModule } from 'ngx-scrollbar';
 import { UsersComponent } from './identity/users/users.component';
-import { SchemaFormComponent } from './components/schema-form/schema-form.component';
+import { SharedModule } from '../../shared/shared.module';
 @NgModule({
   imports: [
     CommonModule,
@@ -22,7 +22,8 @@ import { SchemaFormComponent } from './components/schema-form/schema-form.compon
     DelonFormModule,
     FormsModule,
     ReactiveFormsModule,
-    ScrollbarModule
+    ScrollbarModule,
+    SharedModule
   ],
   declarations: [
     Exception404Component,
@@ -30,7 +31,6 @@ import { SchemaFormComponent } from './components/schema-form/schema-form.compon
     IndexComponent,
     LoginComponent,
     DefaultLayoutComponent,
-    UsersComponent,
-    SchemaFormComponent]
+    UsersComponent]
 })
 export class SysModule { }

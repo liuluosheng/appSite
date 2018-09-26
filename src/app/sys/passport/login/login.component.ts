@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../../../shared/services/dto/User';
-
-
-import { ODataQueryService } from '../../../../shared/services/injectable/ODataQueryService';
 import {
   FormBuilder,
   FormGroup,
@@ -11,14 +7,14 @@ import {
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { HttpLoading } from '../../../../shared/services/injectable/HttpLoading';
-
+import { User } from 'src/shared/dto/User';
+import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
+import { HttpLoading } from 'src/core/services/injectable/http.Loading';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.less'],
-  providers: [ODataQueryService]
+  styleUrls: ['./login.component.less']
 })
 export class LoginComponent implements OnInit {
   schema = { properties: {} };
@@ -26,7 +22,6 @@ export class LoginComponent implements OnInit {
   validateForm: FormGroup;
   isSpinning = false;
   constructor(
-    protected service: ODataQueryService<User>,
     private authService: OAuthService,
     private router: Router,
     private notification: NzNotificationService,
@@ -55,7 +50,6 @@ export class LoginComponent implements OnInit {
     }
   }
   ngOnInit() {
-    this.service.init('users');
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
       password: [null, [Validators.required]]

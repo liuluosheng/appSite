@@ -1,0 +1,10 @@
+<nz-select  style="width:100%"  [nzPlaceHolder]="placeHolder" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearch($event)">
+  <ng-container *ngFor="let o of optionList">
+    <nz-option *ngIf="!loading.value" [nzValue]="o.Id" [nzLabel]="o[labelProp]" [nzCustomContent]="true" >
+    {{getLabel(o)}}
+    </nz-option>
+  </ng-container>
+  <nz-option *ngIf="loading.value" nzDisabled nzCustomContent>
+    <i class="anticon anticon-loading anticon-spin loading-icon"></i> 数据加载中...
+  </nz-option>
+</nz-select>
