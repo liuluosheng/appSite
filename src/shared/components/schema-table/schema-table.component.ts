@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ContentChildren, QueryList } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -9,11 +9,11 @@ import { ODataQueryService } from 'src/core/services/injectable/oData.QueryServi
 import { HttpLoading } from 'src/core/services/injectable/http.Loading';
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { OdataOperard } from 'src/shared/const/odataOperard.enum';
+import { TableActionComponent } from './schema-table.action.component';
 
 
 @Component({
   selector: 'app-schema-table',
-  providers: [HttpLoading],
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
@@ -35,12 +35,14 @@ export class SchemaTableComponent implements OnInit {
   private cloumns = [];
   private filters = [];
   private showFilter = false;
-
+  private rowActions: any[];
+  private tableActions: any[];
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private httpLoading: HttpLoading
   ) {
 
   }
@@ -49,7 +51,7 @@ export class SchemaTableComponent implements OnInit {
   set schemaType(value) {
     this._schemaType = value;
   }
-
+  @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -188,6 +190,10 @@ export class SchemaTableComponent implements OnInit {
         this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);
+    /// 加载表格自定义操作
+    this.rowActions = this.actions
+      .filter((x) => x.type === 'row')
+      .map((v) => ({ name: v.name, icon: v.icon, handle: (row: any) => { } }));
   }
 
 

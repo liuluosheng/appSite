@@ -79,16 +79,15 @@
           </a>
           <ul nz-menu>
             <li nz-menu-item>
-              <a><i class="anticon anticon-profile"></i>详情...</a>
-            </li>
-            <li nz-menu-item>
               <a><i class="anticon anticon-delete"></i>删除</a>
             </li>
             <li nz-menu-item>
               <a (click)=" updateItem=data; visibleDrawer=true;"><i class="anticon anticon-edit"></i>编辑...</a>
             </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item nzDisabled>3rd menu item</li>
+            <li nz-menu-item *ngFor="let x of rowActions">
+              <a (click)=""><i class="anticon {{x.icon}}"></i>{{action.name}}</a>
+            </li>
           </ul>
         </nz-dropdown>
       </td>
@@ -100,7 +99,7 @@
   <app-schema-form [formData]='updateItem' [schema]="schema" (formSumbit)="save($event)" #asp>
     <div class="footer">
       <button nz-button type="button" (click)="visibleDrawer=false;">取 消</button>
-      <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading.value">确 定</button>
+      <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="httpLoading.value">确 定</button>
     </div>
   </app-schema-form>
 
