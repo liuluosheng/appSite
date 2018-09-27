@@ -1,3 +1,43 @@
+<div class="table_actions">
+  <button nz-button nzType="primary" *ngFor="let x of tableActions" (click)="x.open(nzTable.data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</button>
+  <button nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</button>
+  <button nz-button nz-popover nzType="primary" nzTitle="查询" [(nzVisible)]="visible" nzTrigger="click" [nzContent]="filterTemplate"
+    nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...</button>
+</div>
+<ng-template #filterTemplate>
+  <div *ngFor="let col of cloumns" class="filter-item">
+    <ng-container *ngIf="col.type=='number'">
+      <nz-input-group nzCompact style="min-width:100px;">
+        <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
+        <input type="text" disabled nz-input placeholder="~" style="width:10%; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255); padding:4px 0; text-align: center">
+        <input type="text" nz-input placeholder="{{col.title}} Max" style="width:45%; text-align: center; border-left: 0px;"
+          (blur)="filter(col,'le',$event.target.value)">
+      </nz-input-group>
+    </ng-container>
+    <ng-container *ngIf="col.type=='enum'">
+      <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="Choose" (ngModelChange)="filter(col,'eq',$event)">
+        <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
+      </nz-select>
+    </ng-container>
+    <ng-container *ngIf="col.type=='boolean'">
+      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="Choose" [(ngModel)]="_booleanValue" (ngModelChange)="filter(col,'eq',$event)">
+        <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
+      </nz-select>
+    </ng-container>
+    <ng-container *ngIf="col.type=='datetime'">
+      <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" (ngModelChange)="filter(col,'ge',$event)"
+        ngModel [nzFormat]="dateFormat" style='width: 100%'></nz-range-picker>
+    </ng-container>
+    <ng-container *ngIf="col.type=='string'">
+      <nz-input-group nzSuffixIcon="anticon anticon-search" nzAllowClear>
+        <input nz-input id=" name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off" placeholder="{{col.title}}">
+      </nz-input-group>
+    </ng-container>
+  </div>
+  <div>
+    <button nz-button nzType="primary" style="width:100%" (click)="clearFilter();">取消搜索</button>
+  </div>
+</ng-template>
 <nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" nzSize="middle"
   [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
   (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]="loading">
@@ -7,64 +47,16 @@
         (nzCheckedChange)="checkAll($event)"></th>
       <th *ngFor="let col of cloumns" nzWidth="100px" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
       <th nzWidth="40px" class="text-right actions">
-        <i class="anticon anticon-filter" *ngIf='!showFilter' (click)="showFilter=true;"></i>
-        <nz-dropdown [nzPlacement]="'bottomRight'">
-          <a nz-dropdown>
-            <strong title='过滤'><i class="anticon anticon-ellipsis"></i></strong>
-          </a>
-          <ul nz-menu>
-            <li nz-menu-item>
-              <a (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</a>
-            </li>
-            <li nz-menu-divider></li>
-            <li nz-menu-item *ngFor="let x of tableActions">
-              <a (click)="x.open(nzTable.data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</a>
-            </li>
-            <li nz-menu-item>
-              <a><i class="anticon anticon-profile"></i>选择列...</a>
-            </li>
-          </ul>
-        </nz-dropdown>
+        <i class="anticon anticon-bars"></i>
       </th>
     </tr>
   </thead>
   <tbody>
-    <tr class="filter" *ngIf='showFilter'>
-      <td nzLeft="0px" class="text-center color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
-      <td *ngFor="let col of cloumns">
-        <ng-container *ngIf="col.type=='number'">
-          <nz-input-group nzCompact style="min-width:100px;">
-            <input type="text" nz-input placeholder="Min" style="width:45%; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
-            <input type="text" disabled nz-input placeholder="~" style="width:10%; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255); padding:4px 0; text-align: center">
-            <input type="text" nz-input placeholder="Max" style="width:45%; text-align: center; border-left: 0px;"
-              (blur)="filter(col,'le',$event.target.value)">
-          </nz-input-group>
-        </ng-container>
-        <ng-container *ngIf="col.type=='enum'">
-          <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="Choose" (ngModelChange)="filter(col,'eq',$event)">
-            <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
-          </nz-select>
-        </ng-container>
-        <ng-container *ngIf="col.type=='boolean'">
-          <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="Choose" [(ngModel)]="_booleanValue"
-            (ngModelChange)="filter(col,'eq',$event)">
-            <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
-          </nz-select>
-        </ng-container>
-        <ng-container *ngIf="col.type=='datetime'">
-          <nz-range-picker (ngModelChange)="filter(col,'ge',$event)" ngModel [nzFormat]="dateFormat" style='width: 220px;'></nz-range-picker>
-        </ng-container>
-        <ng-container *ngIf="col.type=='string'">
-          <input nz-input id=" name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off">
-        </ng-container>
-      </td>
-      <td nzWidth="80px" nzRight="0px" class="text-right color-bule"><i class="anticon anticon-minus-circle-o" (click)="hideFilter();"></i></td>
-    </tr>
-    <tr *ngFor="let data of nzTable.data;let i=index; ">
+    <tr *ngFor="let data of nzTable.data;let i=index; " class="data-row">
       <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
       <td *ngFor="let col of cloumns">
         <ng-container *ngIf="col.type=='upload'">
-          <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button><i class="anticon anticon-download"></i>查看</a>
+          <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
         </ng-container>
         <ng-container *ngIf="col.type=='boolean'">
           <nz-switch [(ngModel)]="data[col.name]" [nzDisabled]="true"></nz-switch>
