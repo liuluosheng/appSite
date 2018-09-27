@@ -15,12 +15,12 @@
       </nz-input-group>
     </ng-container>
     <ng-container *ngIf="col.type=='enum'">
-      <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="Choose" (ngModelChange)="filter(col,'eq',$event)">
+      <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="{{col.title}}" (ngModelChange)="filter(col,'eq',$event)">
         <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
       </nz-select>
     </ng-container>
     <ng-container *ngIf="col.type=='boolean'">
-      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="Choose" [(ngModel)]="_booleanValue" (ngModelChange)="filter(col,'eq',$event)">
+      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="_booleanValue" (ngModelChange)="filter(col,'eq',$event)">
         <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
       </nz-select>
     </ng-container>
