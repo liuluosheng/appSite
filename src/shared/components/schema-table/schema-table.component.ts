@@ -19,13 +19,12 @@ import { TableActionComponent } from './schema-table.action.component';
 })
 export class SchemaTableComponent implements OnInit, AfterContentInit {
 
-  private _schemaType: string;
   private allChecked = false;
   private indeterminate = false;
   private visibleDrawer = false;
   private dataSet: any[];
   private updateItem: any;
-  private schema: any;
+  private schema: any[];
   private loading = true;
   private pageindex = 1;
   private pagesize = 10;
@@ -48,10 +47,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
 
   }
   /// 必须要指定的类型
-  @Input()
-  set schemaType(value) {
-    this._schemaType = value;
-  }
+  @Input() schemaType: string;
   @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
@@ -141,18 +137,10 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     }
     this.getpage(this.pageindex, this.pagesize, `${sortName} ${this.sortValue.replace('end', '')}`);
   }
-  initColumns() {
-    for (const i in this.schema.properties) {
-      if (this.schema.properties.hasOwnProperty(i)) {
-        const props = this.schema.properties[i];
-        this.cloumns = [...this.cloumns, props];
-      }
-    }
-  }
   save(item): void {
     this.loading = true;
     if (this.updateItem.Id == null) {
-      this.service.init(this._schemaType).Create(item).subscribe((data) => {
+      this.service.init(this.schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
         this.loading = false;
@@ -160,7 +148,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     } else {
       const apply = compare(this.updateItem, item);
       if (apply.length === 0) { return; }
-      this.service.init(this._schemaType).UpdateByPatch(apply, item.Id).subscribe((data) => {
+      this.service.init(this.schemaType).UpdateByPatch(apply, item.Id).subscribe((data) => {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
@@ -175,7 +163,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     this.loading = true;
     this.pagesize = pagesize;
     this.pageindex = pageindex;
-    this.service.init(this._schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
+    this.service.init(this.schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
       this.dataSet = o.data;
       this.total = o.count;
       this.refreshStatus();
@@ -183,11 +171,9 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     });
   }
   ngOnInit() {
-    this.http.get(`${environment.jsonSchemaUrl}/${this._schemaType}`)
+    this.http.get(`${environment.jsonSchemaUrl}/${this.schemaType}`)
       .subscribe((data: any) => {
         this.schema = data;
-        this.schema.ui = { grid: { span: 12, gutter: 10 } };
-        this.initColumns();
       });
     this.getpage(this.pageindex, this.pagesize);
   }

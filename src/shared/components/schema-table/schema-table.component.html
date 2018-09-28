@@ -5,8 +5,8 @@
     nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...</button>
 </div>
 <ng-template #filterTemplate>
-  <div *ngFor="let col of cloumns" class="filter-item">
-    <ng-container *ngIf="col.type=='number'">
+  <div *ngFor="let col of schema" class="filter-item">
+    <ng-container *ngIf="col.type=='Number'">
       <nz-input-group nzCompact style="min-width:100px;">
         <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
         <input type="text" disabled nz-input placeholder="~" style="width:10%; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255); padding:4px 0; text-align: center">
@@ -14,21 +14,21 @@
           (blur)="filter(col,'le',$event.target.value)">
       </nz-input-group>
     </ng-container>
-    <ng-container *ngIf="col.type=='enum'">
+    <ng-container *ngIf="col.type=='Select'">
       <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="{{col.title}}" (ngModelChange)="filter(col,'eq',$event)">
         <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
       </nz-select>
     </ng-container>
-    <ng-container *ngIf="col.type=='boolean'">
+    <ng-container *ngIf="col.type=='Switch'">
       <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="_booleanValue" (ngModelChange)="filter(col,'eq',$event)">
         <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
       </nz-select>
     </ng-container>
-    <ng-container *ngIf="col.type=='datetime'">
+    <ng-container *ngIf="col.type=='DateTime'">
       <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" (ngModelChange)="filter(col,'ge',$event)"
         ngModel [nzFormat]="dateFormat" style='width: 100%'></nz-range-picker>
     </ng-container>
-    <ng-container *ngIf="col.type=='string'">
+    <ng-container *ngIf="col.type=='Text'">
       <nz-input-group nzSuffixIcon="anticon anticon-search" nzAllowClear>
         <input nz-input id=" name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off" placeholder="{{col.title}}">
       </nz-input-group>
@@ -45,7 +45,7 @@
     <tr class="thead">
       <th nzWidth="30px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate"
         (nzCheckedChange)="checkAll($event)"></th>
-      <th *ngFor="let col of cloumns" nzWidth="100px" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      <th *ngFor="let col of schema" nzWidth="100px" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
       <th nzWidth="40px" class="text-right actions">
         <i class="anticon anticon-bars"></i>
       </th>
@@ -54,17 +54,17 @@
   <tbody>
     <tr *ngFor="let data of nzTable.data;let i=index; " class="data-row">
       <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
-      <td *ngFor="let col of cloumns">
-        <ng-container *ngIf="col.type=='upload'">
+      <td *ngFor="let col of schema">
+        <ng-container *ngIf="col.type=='Upload'">
           <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
         </ng-container>
-        <ng-container *ngIf="col.type=='boolean'">
-          <nz-switch [(ngModel)]="data[col.name]" [nzDisabled]="true"></nz-switch>
+        <ng-container *ngIf="col.type=='Switch'">
+            <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
         </ng-container>
-        <ng-container *ngIf="col.type=='string' || col.type=='number' || col.type=='enum'">
+        <ng-container *ngIf="col.type=='Text' || col.type=='Number'">
           {{data[col.name]}}
         </ng-container>
-        <ng-container *ngIf="col.type=='datetime'">
+        <ng-container *ngIf="col.type=='DateTime'">
           {{data[col.name]|date:'yyyy-MM-dd HH:mm'}}
         </ng-container>
       </td>

@@ -12,7 +12,6 @@ import { SysModule } from './sys/sys.module';
 import { WmsModule } from './wms/wms.module';
 import { OAuthModule, OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
 import { oAuthConfig } from '../core/config/oauthConfig';
-import { DelonFormModule } from '@delon/form';
 import { environment } from '../environments/environment';
 import { CoreModule } from '../core/core.module';
 
@@ -37,8 +36,7 @@ registerLocaleData(zh);
         allowedUrls: environment.oauthSendTokenUrl,
         sendAccessToken: true
       }
-    }),
-    DelonFormModule.forRoot()
+    })
   ],
   bootstrap: [AppComponent]
 })

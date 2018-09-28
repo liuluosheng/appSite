@@ -31,13 +31,13 @@ export class SchemaFormComponent implements OnInit, OnChanges {
     if (this._schema) {
       return {
         text: this._schema.filter((n) =>
-        n.type === 'string' ||
-        n.type === 'enum' ||
-        n.type === 'number' ||
-        n.type === 'autocomplete' ||
-        n.type === 'boolean' ||
-        n.type === 'datetime'),
-        upload: this._schema.filter((n) => n.type === 'upload')
+        n.type === 'Text' ||
+        n.type === 'Select' ||
+        n.type === 'Number' ||
+        n.type === 'Autocomplete' ||
+        n.type === 'Switch' ||
+        n.type === 'DateTime'),
+        upload: this._schema.filter((n) => n.type === 'Upload')
       };
     }
     return {};
@@ -68,7 +68,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   /// 初始化一个FormGroup
   initValidateForm(schema?: any) {
     const controls: any = {};
-    const _props = schema ? Object.keys(schema.properties).map((value) => schema.properties[value]) : this._schema;
+    const _props = schema || this._schema;
     _props.forEach((item) => {
       let validators = [];
       if (item.required) {
