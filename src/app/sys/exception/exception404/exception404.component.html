@@ -6,38 +6,40 @@
 
 <button (click)="open();" nz-button>Show</button>
 
-<nz-drawer [nzMaskClosable]="false"
-  [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
+<!-- <nz-drawer [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible" nzTitle="Create" (nzOnClose)="close()">
   <app-schema-form [schema]="schema"></app-schema-form>
-</nz-drawer>
+</nz-drawer> -->
 <!-- <app-autocomplete  [(ngModel)]="selectedUser" schemaType="employees" search="Name,PhoneNumber" labelProp="Name" placeHolder="搜索用户名,联系电话"></app-autocomplete> -->
+<br>
 
+<div style="width:90%;margin:20px auto;" class="warp">
 
-<app-schema-table schemaType="product">
+  <app-schema-table schemaType="product">
     <app-table-action name="表格自定义" icon="anticon-delete" type="table" #action_b>
-        <nz-drawer  [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action_b.visible" nzTitle="自定义" (nzOnClose)="action_b.visible=false;">
-        <div>自定义Action1</div> 
+      <nz-drawer [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action_b.visible" nzTitle="自定义" (nzOnClose)="action_b.visible=false;">
+        <div>自定义Action1</div>
         <div>{{action_b.data | json}}</div>
         <div class="footer">
           <button nz-button type="button" (click)="action_b.visible=false;">取 消</button>
           <button nz-button type="submit" [nzType]="'primary'">确 定</button>
         </div>
-        </nz-drawer>
-      </app-table-action>
-  <app-table-action name="抽屉形式" icon="anticon-delete" #action>
-    <nz-drawer  [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action.visible" nzTitle="自定义" (nzOnClose)="action.visible=false;">
-    <div>自定义Action1</div> 
-    <div>{{action.data | json}}</div>
-    <div class="footer">
-      <button nz-button type="button" (click)="action.visible=false;">取 消</button>
-      <button nz-button type="submit" [nzType]="'primary'">确 定</button>
-    </div>
-    </nz-drawer>
-  </app-table-action>
-  <app-table-action name="弹框形式" icon="anticon-delete" #action_a>
+      </nz-drawer>
+    </app-table-action>
+    <app-table-action name="抽屉形式" icon="anticon-delete" #action>
+      <nz-drawer [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action.visible" nzTitle="自定义" (nzOnClose)="action.visible=false;">
+        <div>自定义Action1</div>
+        <div>{{action.data | json}}</div>
+        <div class="footer">
+          <button nz-button type="button" (click)="action.visible=false;">取 消</button>
+          <button nz-button type="submit" [nzType]="'primary'">确 定</button>
+        </div>
+      </nz-drawer>
+    </app-table-action>
+    <app-table-action name="弹框形式" icon="anticon-delete" #action_a>
       <nz-modal [(nzVisible)]="action_a.visible" nzTitle="The first Modal" (nzOnCancel)="action_a.visible=false">
-          <p>Content one</p>
-          <div>{{action_a.data | json}}</div>
+        <p>Content one</p>
+        <div>{{action_a.data | json}}</div>
       </nz-modal>
-  </app-table-action>
-</app-schema-table>
+    </app-table-action>
+  </app-schema-table>
+</div>

@@ -70,7 +70,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     });
     this.refreshStatus();
   }
-  hideFilter(): void {
+  clearFilter(): void {
     this.showFilter = false;
     this.filters = [];
     this.getpage(this.pageindex, this.pagesize);
