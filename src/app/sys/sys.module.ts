@@ -6,7 +6,6 @@ import { Exception404Component } from './exception/exception404/exception404.com
 import { Exception403Component } from './exception/exception403/exception403.component';
 import { LoginComponent } from './passport/login/login.component';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
-import { DelonFormModule } from '@delon/form';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { DefaultLayoutComponent } from './layout/default/default.component';
@@ -19,7 +18,6 @@ import { SharedModule } from '../../shared/shared.module';
     CommonModule,
     NgZorroAntdModule,
     SysRoutingModule,
-    DelonFormModule,
     FormsModule,
     ReactiveFormsModule,
     ScrollbarModule,
