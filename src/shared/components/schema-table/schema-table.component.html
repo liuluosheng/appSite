@@ -8,29 +8,29 @@
   <div *ngFor="let col of schema" class="filter-item">
     <ng-container *ngIf="col.type=='Number'">
       <nz-input-group nzCompact style="min-width:100px;">
-        <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;" (blur)="filter(col,'ge',$event.target.value)">
+        <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;" [(ngModel)]="filterObj[col.name+'_min']">
         <input type="text" disabled nz-input placeholder="~" style="width:10%; border-left: 0px; pointer-events: none; background-color: rgb(255, 255, 255); padding:4px 0; text-align: center">
         <input type="text" nz-input placeholder="{{col.title}} Max" style="width:45%; text-align: center; border-left: 0px;"
-          (blur)="filter(col,'le',$event.target.value)">
+          [(ngModel)]="filterObj[col.name+'_max']">
       </nz-input-group>
     </ng-container>
     <ng-container *ngIf="col.type=='Select'">
-      <nz-select style='width: 100%' [(ngModel)]="_enumValue" nzAllowClear nzPlaceHolder="{{col.title}}" (ngModelChange)="filter(col,'eq',$event)">
-        <nz-option *ngFor="let op of col.enum" [nzValue]="op" [nzLabel]="op"></nz-option>
+      <nz-select style='width: 100%' [(ngModel)]="filterObj[col.name]" nzAllowClear nzPlaceHolder="{{col.title}}">
+        <nz-option *ngFor="let op of col.options" [nzValue]="op" [nzLabel]="op"></nz-option>
       </nz-select>
     </ng-container>
     <ng-container *ngIf="col.type=='Switch'">
-      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="_booleanValue" (ngModelChange)="filter(col,'eq',$event)">
+      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="filterObj[col.name]">
         <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
       </nz-select>
     </ng-container>
     <ng-container *ngIf="col.type=='DateTime'">
-      <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" (ngModelChange)="filter(col,'ge',$event)"
+      <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" [(ngModel)]="filterObj[col.name]"
         ngModel [nzFormat]="dateFormat" style='width: 100%'></nz-range-picker>
     </ng-container>
     <ng-container *ngIf="col.type=='Text'">
       <nz-input-group nzSuffixIcon="anticon anticon-search" nzAllowClear>
-        <input nz-input id=" name" (blur)="filter(col,'contains',$event.target.value)" autocomplete="off" placeholder="{{col.title}}">
+        <input nz-input id=" name" [(ngModel)]="filterObj[col.name]" autocomplete="off" placeholder="{{col.title}}">
       </nz-input-group>
     </ng-container>
   </div>
@@ -38,9 +38,9 @@
     <button nz-button nzType="primary" style="width:100%" (click)="clearFilter();">取消搜索</button>
   </div>
 </ng-template>
-<nz-table #nzTable [nzData]="dataSet" [nzTotal]="total" [nzPageIndex]="pageindex" [nzPageSize]="pagesize" nzSize="middle"
-  [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="getpage($event,pagesize)"
-  (nzPageSizeChange)="getpage(pageindex,$event)" [nzLoading]="loading">
+<nz-table #nzTable [nzData]="dataSet" [nzTotal]="page.Total" [nzPageIndex]="page.PageIndex" [nzPageSize]="page.PageSize"
+  nzSize="middle" [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="page.PageIndex=$event; getpage()"
+  (nzPageSizeChange)="page.PageSize=$event;getpage()" [nzLoading]="loading">
   <thead>
     <tr class="thead">
       <th nzWidth="30px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate"
@@ -59,9 +59,9 @@
           <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
         </ng-container>
         <ng-container *ngIf="col.type=='Switch'">
-            <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
+          <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
         </ng-container>
-        <ng-container *ngIf="col.type=='Text' || col.type=='Number'">
+        <ng-container *ngIf="col.type=='Text' || col.type=='Number' || col.type=='Select'">
           {{data[col.name]}}
         </ng-container>
         <ng-container *ngIf="col.type=='DateTime'">

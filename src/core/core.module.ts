@@ -11,6 +11,7 @@ import { AuthGuard } from './services/guard/auth.guard';
 import { HttpLoading } from './services/injectable/httpLoading.service';
 import { ODataQueryService } from './services/injectable/oDataQuery.service';
 import { throwIfAlreadyLoaded } from './services/guard/module.import.guard';
+import { OdataFilterFactory } from './services/injectable/oDataFilterFactory.service';
 
 
 
@@ -26,7 +27,9 @@ import { throwIfAlreadyLoaded } from './services/guard/module.import.guard';
     { provide: HttpLoading, useClass: HttpLoading },
     AuthGuard,
     ODataQueryService,
-    ODataServiceFactory],
+    ODataServiceFactory,
+    OdataFilterFactory
+  ],
 })
 /// CoreModule为服务定义模块 仅在AppModule模块中导入且仅允许导入一次
 export class CoreModule {

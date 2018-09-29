@@ -1,11 +1,11 @@
 export enum Controls {
-    Number,
-    String,
-    DateTime,
-    Upload,
-    Autocomplete,
-    MultilineText,
-    Select,
-    Text,
-    Switch
+    Number= 'Number',
+    String= 'String',
+    DateTime= 'DateTime',
+    Upload= 'Upload',
+    Autocomplete= 'Autocomplete',
+    MultilineText= 'MultilineText',
+    Select= 'Select',
+    Text= 'Text',
+    Switch= 'Switch'
 }

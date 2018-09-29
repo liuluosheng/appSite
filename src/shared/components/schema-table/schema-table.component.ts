@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList, AfterContentInit } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -10,6 +10,8 @@ import { HttpLoading } from '../../../core/services/injectable/httpLoading.servi
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 import { TableActionComponent } from './schema-table.action.component';
+import { OdataFilterFactory } from 'src/core/services/injectable/oDataFilterFactory.service';
+import { Page } from '../../../core/declare/page.class';
 
 
 @Component({
@@ -17,32 +19,28 @@ import { TableActionComponent } from './schema-table.action.component';
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
-export class SchemaTableComponent implements OnInit, AfterContentInit {
+export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges {
 
   private allChecked = false;
   private indeterminate = false;
   private visibleDrawer = false;
   private dataSet: any[];
   private updateItem: any;
-  private schema: any[];
+  private schema = [];
   private loading = true;
-  private pageindex = 1;
-  private pagesize = 10;
-  private total: number;
-  private sortName: string = null;
-  private sortValue: string = null;
   private sortMap = {};
-  private cloumns = [];
-  private filters = [];
+  private filterObj = {};
   private showFilter = false;
   private rowActions: any[];
   private tableActions: any[];
+  private page = new Page();
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
     private modalService: NzModalService,
     private notification: NzNotificationService,
-    private httpLoading: HttpLoading
+    private httpLoading: HttpLoading,
+    private odateFilterFactory: OdataFilterFactory
   ) {
 
   }
@@ -68,74 +66,18 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
   }
   clearFilter(): void {
     this.showFilter = false;
-    this.filters = [];
-    this.getpage(this.pageindex, this.pagesize);
-  }
-  filter(odataProperty: any, op: OdataOperard, value: any): void {
-    const lastFilterString = this.filters.map((o) => o.value).join(` ${OdataOperard.And} `);
-    this.filters = this.filters.filter((n) => n.name !== odataProperty.name
-      || (n.name === odataProperty.name && n.operard !== op && odataProperty.type !== 'datetime'));
-    if (value || value === false || value === 0) {
-      switch (op) {
-        case OdataOperard.Equals:
-        case OdataOperard.GreaterThan:
-        case OdataOperard.GreaterThanOrEqual:
-        case OdataOperard.LessThan:
-        case OdataOperard.LessThanOrEqual:
-        case OdataOperard.NotEquals:
-          if (odataProperty.type === 'datetime') {
-            if (value.length !== 0) {
-              this.filters = [...this.filters,
-              {
-                name: odataProperty.name,
-                operard: OdataOperard.GreaterThanOrEqual,
-                value:
-                  `${odataProperty.name} ${OdataOperard.GreaterThanOrEqual} ${format(value[0])}`
-              },
-              {
-                name: odataProperty.name,
-                operard: OdataOperard.LessThanOrEqual,
-                value:
-                  `${odataProperty.name} ${OdataOperard.LessThanOrEqual} ${format(value[1])}`
-              }
-              ];
-            }
-          } else {
-            this.filters = [...this.filters, {
-              name: odataProperty.name,
-              operard: op,
-              value:
-                odataProperty.enum ?
-                  `${odataProperty.name} ${op} '${value}'` :
-                  `${odataProperty.name} ${op} ${value}`
-            }];
-          }
-          break;
-        case OdataOperard.Contains:
-          this.filters = [...this.filters, {
-            name: odataProperty.name,
-            operard: op,
-            value: `${op}(${odataProperty.name}, '${value}')`
-          }];
-          break;
-      }
-    }
-    const filterString = this.filters.map((o) => o.value).join(` ${OdataOperard.And} `);
-    if (lastFilterString !== filterString) {
-      this.getpage(this.pageindex, this.pagesize, null, filterString);
-    }
-    console.log(filterString);
+    this.filterObj = {};
+    this.getpage();
   }
   sort(sortName: string, value: string): void {
     if (!value) { return; }
-    this.sortName = sortName;
-    this.sortValue = value;
     for (const key in this.sortMap) {
       if (this.sortMap.hasOwnProperty(key)) {
         this.sortMap[key] = (key === sortName ? value : null);
       }
     }
-    this.getpage(this.pageindex, this.pagesize, `${sortName} ${this.sortValue.replace('end', '')}`);
+    this.page.OrderBy = `${sortName} ${value.replace('end', '')}`;
+    this.getpage();
   }
   save(item): void {
     this.loading = true;
@@ -158,14 +100,11 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     }
 
   }
-
-  getpage(pageindex: number, pagesize: number, sort?: string, filter?: string) {
+  getpage() {
     this.loading = true;
-    this.pagesize = pagesize;
-    this.pageindex = pageindex;
-    this.service.init(this.schemaType).Page(pageindex, pagesize, sort || 'CreatedDate desc', filter).subscribe((o) => {
+    this.odateFilterFactory.Create(this.schema).CreatePageData(this.schemaType, this.page, this.filterObj).subscribe((o) => {
       this.dataSet = o.data;
-      this.total = o.count;
+      this.page.Total = o.count;
       this.refreshStatus();
       this.loading = false;
     });
@@ -175,12 +114,19 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
       .subscribe((data: any) => {
         this.schema = data;
       });
-    this.getpage(this.pageindex, this.pagesize);
+    this.getpage();
   }
   ngAfterContentInit(): void {
     /// 加载表格自定义操作
     this.rowActions = this.actions.filter(x => x.type === 'row');
     this.tableActions = this.actions.filter(x => x.type === 'table');
+  }
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
+    Object.keys(changes).forEach((key) => {
+      if (key === 'filterObj' && changes[key].currentValue) {
+        this.getpage();
+      }
+    });
   }
 }
 

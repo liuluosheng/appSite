@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { first, switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { EntityBase } from 'src/shared/dto/EntityBase';
+import { Page } from '../../declare/page.class';
 
 @Injectable()
 export class ODataQueryService<T extends EntityBase> {
@@ -25,12 +26,12 @@ class QueryService<T extends EntityBase> {
             first<T>()
         );
     }
-    public Page(pageindex: number, pagesize: number, orderby: string, filter?: string): Observable<ODataPagedResult<T>> {
+    public Page(page: Page): Observable<ODataPagedResult<T>> {
         return this.odata.Query()
-            .Skip((pageindex - 1) * pagesize)
-            .Filter(filter)
-            .Top(pagesize)
-            .OrderBy(orderby)
+            .Skip((page.PageIndex - 1) * page.PageSize)
+            .Filter(page.Filter)
+            .Top(page.PageSize)
+            .OrderBy(page.OrderBy)
             .ExecWithCount();
     }
     public Create(item: T): Observable<T> {
