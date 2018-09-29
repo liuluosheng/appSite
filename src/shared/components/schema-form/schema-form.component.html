@@ -11,25 +11,25 @@
           </span>
         </nz-form-label>
         <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
-          <ng-container *ngIf="item.type=='boolean'">
+          <ng-container *ngIf="item.type=='Switch'">
             <nz-switch [formControlName]="item.name"></nz-switch>
           </ng-container>
-          <ng-container *ngIf="item.type=='datetime'">
+          <ng-container *ngIf="item.type=='DateTime'">
             <nz-date-picker [formControlName]="item.name" nzShowTime></nz-date-picker>
           </ng-container>
-          <ng-container *ngIf="item.type=='string'">
-            <input type="text" nz-input [formControlName]="item.name">
+          <ng-container *ngIf="item.type=='Text'">
+            <input type="text" nz-input [formControlName]="item.name" [placeholder]="item.placeHolder||''">
           </ng-container>
-          <ng-container *ngIf="item.type=='enum'">
-            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="请选择" [formControlName]="item.name">
-              <nz-option *ngFor="let n of item.enum;" [nzLabel]="n" [nzValue]="n"></nz-option>
+          <ng-container *ngIf="item.type=='Select'">
+            <nz-select nzShowSearch nzAllowClear [nzPlaceHolder]="'请选择'" [formControlName]="item.name">
+              <nz-option *ngFor="let n of item.options;" [nzLabel]="n" [nzValue]="n"></nz-option>
             </nz-select>
           </ng-container>
-          <ng-container *ngIf="item.type=='autocomplete'">
-            <app-autocomplete [schemaType]="item.dataType" [search]="item.autocomplete.search" [labelProp]="item.autocomplete.label"
-              [formControlName]="item.name" [placeHolder]="item.autocomplete.placeHolder"></app-autocomplete>
+          <ng-container *ngIf="item.type=='Autocomplete'">
+            <app-autocomplete [schemaType]="item.dataType" [search]="item.search" [labelProp]="item.label"
+              [formControlName]="item.name" [placeHolder]="item.placeHolder"></app-autocomplete>
           </ng-container>
-          <ng-container *ngIf="item.type=='number'">
+          <ng-container *ngIf="item.type=='Number'">
             <nz-input-number [formControlName]="item.name" [nzMin]="item.minimum" [nzMax]="item.maximum" [nzStep]="1"></nz-input-number>
           </ng-container>
 
@@ -57,14 +57,12 @@
         </span>
       </nz-form-label>
       <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
-        <ng-container *ngIf="item.type=='upload' ">
-          <nz-upload [nzAction]="item.upload.action" [nzFileType]="item.upload.fileType" (nzChange)="fileUpload($event,item)"
+          <nz-upload [nzAction]="item.action" [nzFileType]="item.fileType" (nzChange)="fileUpload($event,item)"
             [nzFileList]="uploadFileList[item.name]">
             <button nz-button type="button">
-              <i class="anticon anticon-upload"></i><span>{{item.upload.text}}</span>
+              <i class="anticon anticon-upload"></i><span>{{item.buttonText}}</span>
             </button>
           </nz-upload>
-        </ng-container>
         <nz-form-explain *ngIf="validateForm.get(item.name)?.dirty && validateForm.get(item.name)?.errors">
           <span *ngIf="validateForm.get(item.name).errors['required']">请上传文件</span>
         </nz-form-explain>
