@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewContainerRef, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges } from '@angular/core';
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
@@ -123,7 +123,8 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   }
   ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     Object.keys(changes).forEach((key) => {
-      if (key === 'filterObj' && changes[key].currentValue) {
+      if (key === 'filterObj') {
+        this.filterObj = changes[key].currentValue;
         this.getpage();
       }
     });
