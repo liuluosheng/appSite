@@ -45,8 +45,8 @@
   </div>
 
 
-  <div *ngFor="let item of schema.upload;" nz-col>
-    <nz-divider></nz-divider>
+  <div *ngFor="let item of schema.upload;let i= index" nz-col>
+    <nz-divider *ngIf="i==0"></nz-divider>
     <nz-form-item>
       <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
         <span>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, forwardRef } from '@angular/core';
-import { HttpLoading } from 'src/core/services/injectable/http.Loading';
-import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
+import { HttpLoading } from '../../../core/services/injectable/httpLoading.service';
+import { ODataQueryService } from '../../../core/services/injectable/oDataQuery.service';
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -24,7 +24,7 @@ export class AutocompleteComponent implements ControlValueAccessor, OnInit {
   @Input() search: string; // 表示要按哪些属性来进行搜索
   @Input() placeHolder: string;
   @ViewChild(NzSelectComponent)
-  private nzSelectComponent: NzSelectComponent ;
+  private nzSelectComponent: NzSelectComponent;
   optionList: any[] = [];
   get searchs() {
     return this.search.split(',');
@@ -38,19 +38,19 @@ export class AutocompleteComponent implements ControlValueAccessor, OnInit {
     protected service: ODataQueryService<EntityBase>,
     protected loading: HttpLoading) { }
   onSearch(value: string): void {
-   const filters =  this.searchs.map((v) => `${OdataOperard.Contains}(${v}, '${value}')`).join(` ${OdataOperard.Or} `);
-   this.service.init(this.schemaType).Query(filters, 20).subscribe((data) => {
-     this.optionList = data;
-   });
+    const filters = this.searchs.map((v) => `${OdataOperard.Contains}(${v}, '${value}')`).join(` ${OdataOperard.Or} `);
+    this.service.init(this.schemaType).Query(filters, 20).subscribe((data) => {
+      this.optionList = data;
+    });
   }
   writeValue(obj: any): void {
     this.nzSelectComponent.writeValue(obj);
     if (obj != null) {
-    this.service.init(this.schemaType).GetById(obj).subscribe((data) => {
-      this.optionList = [data];
-    });
+      this.service.init(this.schemaType).GetById(obj).subscribe((data) => {
+        this.optionList = [data];
+      });
     } else {
-    this.optionList = [];
+      this.optionList = [];
     }
   }
   registerOnChange(fn: any): void {
