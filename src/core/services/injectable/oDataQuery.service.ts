@@ -12,7 +12,7 @@ export class ODataQueryService<T extends EntityBase> {
     }
     public init(type: string): QueryService<T> {
         this.odata = this.oDataService.CreateService<T>(type);
-        return new QueryService(this.odata);
+        return new QueryService<T>(this.odata);
     }
 }
 
