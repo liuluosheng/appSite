@@ -7,9 +7,7 @@ import {
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { User } from 'src/shared/dto/User';
-import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
-import { HttpLoading } from 'src/core/services/injectable/http.Loading';
+import { HttpLoading } from '../../../../core/services/injectable/httpLoading.service';
 
 @Component({
   selector: 'app-login',

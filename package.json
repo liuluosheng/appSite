@@ -27,6 +27,7 @@
     "core-js": "^2.5.4",
     "date-fns": "^1.29.0",
     "fast-json-patch": "^2.0.7",
+    "less": "^2.7.3",
     "ng-zorro-antd": "^1.6.0",
     "ngx-scrollbar": "^2.2.0",
     "rxjs": "^6.3.3",
