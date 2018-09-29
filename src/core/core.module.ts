@@ -8,8 +8,8 @@ import { ODataConfigurationFactory } from './config/odataConfig';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DefaultInterceptor } from './services/interceptor/default.interceptor';
 import { AuthGuard } from './services/guard/auth.guard';
-import { HttpLoading } from 'src/core/services/injectable/http.Loading';
-import { ODataQueryService } from 'src/core/services/injectable/oData.QueryService';
+import { HttpLoading } from './services/injectable/httpLoading.service';
+import { ODataQueryService } from './services/injectable/oDataQuery.service';
 import { throwIfAlreadyLoaded } from './services/guard/module.import.guard';
 
 

@@ -7,7 +7,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, timeout, delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
-import { HttpLoading } from 'src/core/services/injectable/http.Loading';
+import { HttpLoading } from '../injectable/httpLoading.service';
 
 
 @Injectable()
@@ -32,10 +32,10 @@ export class DefaultInterceptor implements HttpInterceptor {
         this.loading.value = true;
         return next.handle(currentReq).pipe(
             tap((v) => {
-                if (v instanceof HttpResponse ) {
-                        this.loading.value = false;
+                if (v instanceof HttpResponse) {
+                    this.loading.value = false;
                 }
-                }),
+            }),
             catchError((error: HttpEvent<any>) => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
