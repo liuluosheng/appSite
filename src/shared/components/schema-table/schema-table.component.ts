@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges } from '@angular/core';
 
-import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -27,7 +26,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   private updateItem: any;
   private loading = true;
   private sortMap = {};
-  private filterObj = {};
   private showFilter = false;
   private rowActions: any[];
   private tableActions: any[];
@@ -43,6 +41,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   }
   /// 必须要指定的类型
   @Input() schemaType: string;
+  @Input() filterObj = {};
   @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);

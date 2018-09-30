@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { ODataPagedResult } from 'angular-odata-es5';
 import { Page } from '../../declare/page.class';
 import { Schema } from '../../declare/schema.class';
-
+import { Query, OperatorType } from 'ngx-odata-v4';
 @Injectable()
 export class OdataFilterFactory {
     constructor(private service: ODataQueryService<EntityBase>) { }
@@ -28,6 +28,7 @@ class OdataFilterService<T extends EntityBase> {
     }
     CreateFilterString(filterObj: any) {
         let filters = [];
+        const query = Query.create();
         this.schema.properties.forEach((item) => {
             const value = filterObj[item.name];
             const min = filterObj[item.name + '_min'];
@@ -36,9 +37,11 @@ class OdataFilterService<T extends EntityBase> {
                 switch (item.type) {
                     case Controls.Number:
                         if (min) {
+                            query.filter(item.name, OperatorType.GreaterOrEqual, min);
                             filters = [...filters, `${item.name} ${OdataOperard.GreaterThanOrEqual} ${min}`];
                         }
                         if (max) {
+                            query.filter(item.name, OperatorType.LessOrEqual, min);
                             filters = [...filters, `${item.name} ${OdataOperard.LessThanOrEqual} ${max}`];
                         }
                         break;
@@ -57,6 +60,7 @@ class OdataFilterService<T extends EntityBase> {
                         filters = [...filters, `${item.name} ${OdataOperard.Equals} ${value}`];
                         break;
                     case Controls.Text:
+                        query.filterComplex(`${OdataOperard.Contains}(${item.name}, '${value}')`);
                         filters = [...filters, `${OdataOperard.Contains}(${item.name}, '${value}')`];
                         break;
                     default:
@@ -64,6 +68,7 @@ class OdataFilterService<T extends EntityBase> {
                 }
             }
         });
+        console.log(query.compile());
         return filters.join(` ${OdataOperard.And} `);
     }
 }
