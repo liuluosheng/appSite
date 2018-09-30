@@ -2,16 +2,15 @@ import { Component, OnInit, Input, ContentChildren, QueryList, AfterContentInit,
 
 import { NzModalService, NzNotificationService } from 'ng-zorro-antd';
 import { compare } from 'fast-json-patch';
-import { format } from 'date-fns';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ODataQueryService } from '../../../core/services/injectable/oDataQuery.service';
 import { HttpLoading } from '../../../core/services/injectable/httpLoading.service';
 import { EntityBase } from 'src/shared/dto/EntityBase';
-import { OdataOperard } from 'src/shared/const/odataOperard.enum';
 import { TableActionComponent } from './schema-table.action.component';
 import { OdataFilterFactory } from 'src/core/services/injectable/oDataFilterFactory.service';
 import { Page } from '../../../core/declare/page.class';
+import { Schema } from '../../../core/declare/schema.class';
 
 
 @Component({
@@ -26,7 +25,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   private visibleDrawer = false;
   private dataSet: any[];
   private updateItem: any;
-  private schema = [];
   private loading = true;
   private sortMap = {};
   private filterObj = {};
@@ -34,11 +32,10 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   private rowActions: any[];
   private tableActions: any[];
   private page = new Page();
+  private schema = new Schema();
   constructor(
     private service: ODataQueryService<EntityBase>,
     private http: HttpClient,
-    private modalService: NzModalService,
-    private notification: NzNotificationService,
     private httpLoading: HttpLoading,
     private odateFilterFactory: OdataFilterFactory
   ) {
@@ -76,7 +73,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
         this.sortMap[key] = (key === sortName ? value : null);
       }
     }
-    this.page.OrderBy = `${sortName} ${value.replace('end', '')}`;
+    this.page.orderBy = `${sortName} ${value.replace('end', '')}`;
     this.getpage();
   }
   save(item): void {
@@ -102,9 +99,9 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   }
   getpage() {
     this.loading = true;
-    this.odateFilterFactory.Create(this.schema).CreatePageData(this.schemaType, this.page, this.filterObj).subscribe((o) => {
+    this.odateFilterFactory.Create(this.schema).CreatePageData(this.page, this.filterObj).subscribe((o) => {
       this.dataSet = o.data;
-      this.page.Total = o.count;
+      this.page.total = o.count;
       this.refreshStatus();
       this.loading = false;
     });
@@ -113,8 +110,8 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
     this.http.get(`${environment.jsonSchemaUrl}/${this.schemaType}`)
       .subscribe((data: any) => {
         this.schema = data;
+        this.getpage();
       });
-    this.getpage();
   }
   ngAfterContentInit(): void {
     /// 加载表格自定义操作

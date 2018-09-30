@@ -28,10 +28,10 @@ class QueryService<T extends EntityBase> {
     }
     public Page(page: Page): Observable<ODataPagedResult<T>> {
         return this.odata.Query()
-            .Skip((page.PageIndex - 1) * page.PageSize)
-            .Filter(page.Filter)
-            .Top(page.PageSize)
-            .OrderBy(page.OrderBy)
+            .Skip((page.pageIndex - 1) * page.pageSize)
+            .Filter(page.filter)
+            .Top(page.pageSize)
+            .OrderBy(page.orderBy)
             .ExecWithCount();
     }
     public Create(item: T): Observable<T> {

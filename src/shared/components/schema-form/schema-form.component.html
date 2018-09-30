@@ -1,6 +1,6 @@
 <form nz-form [nzLayout]="layout" [formGroup]="validateForm" (ngSubmit)="submit()" autocomplete="off">
   <div nz-row [nzGutter]='8'>
-    <div *ngFor="let item of schema.text;" nz-col [nzSpan]="cols">
+    <div *ngFor="let item of controls.text;" nz-col [nzSpan]="cols">
       <nz-form-item>
         <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
           <span>
@@ -45,7 +45,7 @@
   </div>
 
 
-  <div *ngFor="let item of schema.upload;let i= index" nz-col>
+  <div *ngFor="let item of controls.upload;let i= index" nz-col>
     <nz-divider *ngIf="i==0"></nz-divider>
     <nz-form-item>
       <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
@@ -57,12 +57,12 @@
         </span>
       </nz-form-label>
       <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
-          <nz-upload [nzAction]="item.action" [nzFileType]="item.fileType" (nzChange)="fileUpload($event,item)"
-            [nzFileList]="uploadFileList[item.name]">
-            <button nz-button type="button">
-              <i class="anticon anticon-upload"></i><span>{{item.buttonText}}</span>
-            </button>
-          </nz-upload>
+        <nz-upload [nzAction]="item.action" [nzFileType]="item.fileType" (nzChange)="fileUpload($event,item)"
+          [nzFileList]="uploadFileList[item.name]">
+          <button nz-button type="button">
+            <i class="anticon anticon-upload"></i><span>{{item.buttonText}}</span>
+          </button>
+        </nz-upload>
         <nz-form-explain *ngIf="validateForm.get(item.name)?.dirty && validateForm.get(item.name)?.errors">
           <span *ngIf="validateForm.get(item.name).errors['required']">请上传文件</span>
         </nz-form-explain>

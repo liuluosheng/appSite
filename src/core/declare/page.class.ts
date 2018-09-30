@@ -1,7 +1,7 @@
 export class Page {
- PageSize = 10;
- PageIndex = 1;
- Total: number;
- OrderBy = 'CreatedDate desc';
- Filter?: string;
+    pageSize = 10;
+    pageIndex = 1;
+    total: number;
+    orderBy = 'CreatedDate desc';
+    filter?: string;
 }

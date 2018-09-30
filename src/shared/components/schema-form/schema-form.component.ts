@@ -6,6 +6,7 @@ import {
 } from '@angular/forms';
 import { deepClone } from 'fast-json-patch/lib/core';
 import { environment } from '../../../environments/environment';
+import { Schema } from '../../../core/declare/schema.class';
 
 
 
@@ -17,30 +18,26 @@ import { environment } from '../../../environments/environment';
 export class SchemaFormComponent implements OnInit, OnChanges {
   layout: 'horizontal' | 'vertical' = 'vertical';
   cols: 24 | 12 | 8 = 12; // 布局的列数： 24表示1列，12表示2列，8表示3列
-  private _schema: any[];
+
   private _data: any;
   uploadFileList?: any = {};
   validateForm: FormGroup = new FormGroup({});
+  private controls: any = {};
   @Input()
-  set schema(value: any) {
+  set schema(value: Schema) {
     if (value) {
       this.initValidateForm(value);
-    }
-  }
-  get schema() {
-    if (this._schema) {
-      return {
-        text: this._schema.filter((n) =>
-        n.type === 'Text' ||
-        n.type === 'Select' ||
-        n.type === 'Number' ||
-        n.type === 'Autocomplete' ||
-        n.type === 'Switch' ||
-        n.type === 'DateTime'),
-        upload: this._schema.filter((n) => n.type === 'Upload')
+      this.controls = {
+        text: value.properties.filter((n) =>
+          n.type === 'Text' ||
+          n.type === 'Select' ||
+          n.type === 'Number' ||
+          n.type === 'Autocomplete' ||
+          n.type === 'Switch' ||
+          n.type === 'DateTime'),
+        upload: value.properties.filter((n) => n.type === 'Upload')
       };
     }
-    return {};
   }
   @Input()
   set formData(value: any) {
@@ -51,7 +48,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   }
   @Output() formSumbit = new EventEmitter<any>();
   constructor(private fb: FormBuilder) {
-   }
+  }
   /// 表单提交
   submit() {
     Object.keys(this.validateForm.controls).forEach((i) => {
@@ -59,16 +56,16 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       this.validateForm.controls[i].updateValueAndValidity();
     });
     if (this.validateForm.valid) {
-     this.formSumbit.emit(Object.assign(deepClone(this.formData), this.validateForm.value));
+      this.formSumbit.emit(Object.assign(deepClone(this.formData), this.validateForm.value));
     }
   }
   reset() {
     this.validateForm.reset();
   }
   /// 初始化一个FormGroup
-  initValidateForm(schema?: any) {
+  initValidateForm(schema: Schema) {
     const controls: any = {};
-    const _props = schema || this._schema;
+    const _props = schema.properties;
     _props.forEach((item) => {
       let validators = [];
       if (item.required) {
@@ -86,7 +83,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       controls[item.name] = [this.formData[item.name], validators];
     });
     this.validateForm = this.fb.group(controls);
-    this._schema = _props;
+    // this._schema = _props;
   }
   /// 更新表单项目值
   updateFormData(item: any) {
@@ -97,21 +94,21 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   /// 更新编辑表单时上传控件的文件list
   /// 与api的filescontroller配合使用
   fileUploadList() {
-    if (this.schema.upload) {
-      this.schema.upload.forEach((v) => {
+    if (this.controls.upload) {
+      this.controls.upload.forEach((v) => {
         const _value = this.validateForm.controls[v.name].value;
         const reg = /(^|&)?name=([^&]*)(&|$)/;
         if (_value && _value.search(reg) !== -1) {
-            this.uploadFileList[v.name] = [{
-              name: _value.match(reg)[0].split('=')[1],
-              url: `${environment.apiUrl}/${_value}`,
-              response: {
-                result: _value
-              }
-            }];
-         } else {
+          this.uploadFileList[v.name] = [{
+            name: _value.match(reg)[0].split('=')[1],
+            url: `${environment.apiUrl}/${_value}`,
+            response: {
+              result: _value
+            }
+          }];
+        } else {
           this.uploadFileList[v.name] = [];
-         }
+        }
       });
     }
   }

@@ -5,7 +5,7 @@
     nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...</button>
 </div>
 <ng-template #filterTemplate>
-  <div *ngFor="let col of schema" class="filter-item">
+  <div *ngFor="let col of schema.properties" class="filter-item">
     <ng-container *ngIf="col.type=='Number'">
       <nz-input-group nzCompact style="min-width:100px;">
         <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;" [(ngModel)]="filterObj[col.name+'_min']">
@@ -38,14 +38,15 @@
     <button nz-button nzType="primary" style="width:100%" (click)="clearFilter();">取消搜索</button>
   </div>
 </ng-template>
-<nz-table #nzTable [nzData]="dataSet" [nzTotal]="page.Total" [nzPageIndex]="page.PageIndex" [nzPageSize]="page.PageSize"
-  nzSize="middle" [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="page.PageIndex=$event; getpage()"
-  (nzPageSizeChange)="page.PageSize=$event;getpage()" [nzLoading]="loading">
+<nz-table #nzTable [nzData]="dataSet" [nzTotal]="page.total" [nzPageIndex]="page.pageIndex" [nzPageSize]="page.pageSize"
+  nzSize="middle" [nzShowSizeChanger]="true" [nzFrontPagination]='false' (nzPageIndexChange)="page.pageIndex=$event; getpage()"
+  (nzPageSizeChange)="page.pageSize=$event;getpage()" [nzLoading]="loading">
   <thead>
     <tr class="thead">
       <th nzWidth="30px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate"
         (nzCheckedChange)="checkAll($event)"></th>
-      <th *ngFor="let col of schema" nzWidth="100px" nzShowSort [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      <th *ngFor="let col of schema.properties" nzWidth="100px" nzShowSort [(nzSort)]="sortMap[col.name]"
+        (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
       <th nzWidth="40px" class="text-right actions">
         <i class="anticon anticon-bars"></i>
       </th>
@@ -54,7 +55,7 @@
   <tbody>
     <tr *ngFor="let data of nzTable.data;let i=index; " class="data-row">
       <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
-      <td *ngFor="let col of schema">
+      <td *ngFor="let col of schema.properties">
         <ng-container *ngIf="col.type=='Upload'">
           <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
         </ng-container>

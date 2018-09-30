@@ -7,27 +7,28 @@ import { ODataQueryService } from './oDataQuery.service';
 import { Observable } from 'rxjs';
 import { ODataPagedResult } from 'angular-odata-es5';
 import { Page } from '../../declare/page.class';
+import { Schema } from '../../declare/schema.class';
 
 @Injectable()
 export class OdataFilterFactory {
     constructor(private service: ODataQueryService<EntityBase>) { }
-    Create(schema: any[]): OdataFilterService<EntityBase> {
+    Create(schema: Schema): OdataFilterService<EntityBase> {
         return new OdataFilterService<EntityBase>(schema, this.service);
     }
 
 }
 class OdataFilterService<T extends EntityBase> {
-    constructor(private schema: any[], private service: ODataQueryService<T>) {
+    constructor(private schema: Schema, private service: ODataQueryService<T>) {
     }
-    CreatePageData(schemaType: string, page: Page, filterObj?: any): Observable<ODataPagedResult<T>> {
+    CreatePageData(page: Page, filterObj?: any): Observable<ODataPagedResult<T>> {
         if (Object.keys(filterObj).length !== 0) {
-            page.Filter = this.CreateFilterString(filterObj);
+            page.filter = this.CreateFilterString(filterObj);
         }
-        return this.service.init(schemaType).Page(page);
+        return this.service.init(this.schema.type).Page(page);
     }
     CreateFilterString(filterObj: any) {
         let filters = [];
-        this.schema.forEach((item) => {
+        this.schema.properties.forEach((item) => {
             const value = filterObj[item.name];
             const min = filterObj[item.name + '_min'];
             const max = filterObj[item.name + '_max'];
