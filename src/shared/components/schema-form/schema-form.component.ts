@@ -125,7 +125,6 @@ export class SchemaFormComponent implements OnInit, OnChanges {
           control.setValue(event.fileList[c - 1].response.result);
         } else {
           control.setValue(null);
-          console.log(control.valid);
         }
       }
     }

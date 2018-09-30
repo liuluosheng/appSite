@@ -1,8 +1,11 @@
 <div class="table_actions">
   <button nz-button nzType="primary" *ngFor="let x of tableActions" (click)="x.open(nzTable.data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</button>
-  <button nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</button>
+  <nz-badge [nzCount]="filterCount" class="filter-count">
   <button nz-button nz-popover nzType="primary" nzTitle="查询" [(nzVisible)]="visible" nzTrigger="click" [nzContent]="filterTemplate"
-    nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...</button>
+    nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询... 
+  </button>
+</nz-badge>
+<button nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</button>
 </div>
 <ng-template #filterTemplate>
   <div *ngFor="let col of schema.properties" class="filter-item">
@@ -15,17 +18,17 @@
       </nz-input-group>
     </ng-container>
     <ng-container *ngIf="col.type=='Select'">
-      <nz-select style='width: 100%' [(ngModel)]="filterObj[col.name]" nzAllowClear nzPlaceHolder="{{col.title}}">
+      <nz-select style='width: 100%' [(ngModel)]="filterObj[col.name]" nzAllowClear nzPlaceHolder="{{col.title}}" (ngModelChange)="getpage()">
         <nz-option *ngFor="let op of col.options" [nzValue]="op" [nzLabel]="op"></nz-option>
       </nz-select>
     </ng-container>
     <ng-container *ngIf="col.type=='Switch'">
-      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="filterObj[col.name]">
+      <nz-select style='width: 100%' nzAllowClear nzPlaceHolder="{{col.title}}" [(ngModel)]="filterObj[col.name]" (ngModelChange)="getpage()">
         <nz-option *ngFor="let op of [{v:true,name:'是'},{v:false,name:'否'}]" [nzValue]="op.v" [nzLabel]="op.name"></nz-option>
       </nz-select>
     </ng-container>
     <ng-container *ngIf="col.type=='DateTime'">
-      <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" [(ngModel)]="filterObj[col.name]"
+      <nz-range-picker [nzPlaceHolder]="[ col.title+' Start', col.title+' End' ]" [(ngModel)]="filterObj[col.name]" (ngModelChange)="getpage()"
         ngModel [nzFormat]="dateFormat" style='width: 100%'></nz-range-picker>
     </ng-container>
     <ng-container *ngIf="col.type=='Text'">
@@ -33,9 +36,16 @@
         <input nz-input id=" name" [(ngModel)]="filterObj[col.name]" autocomplete="off" placeholder="{{col.title}}">
       </nz-input-group>
     </ng-container>
+    <ng-container *ngIf="col.type=='Autocomplete'">
+        <app-autocomplete [schemaType]="col.dataType" [search]="col.search" [labelProp]="col.label" [(ngModel)]="filterObj[col.name]" (ngModelChange)="getpage()"
+           [placeHolder]="col.title+' - '+col.placeHolder"></app-autocomplete>
+      </ng-container>
   </div>
-  <div>
-    <button nz-button nzType="primary" style="width:100%" (click)="clearFilter();">取消搜索</button>
+  <div class="filter-btn-warp">
+    <nz-button-group>
+      <button nz-button nzType="primary" (click)="clearFilter();"><i class="anticon anticon-left"></i>取消</button>
+      <button nz-button nzType="primary" (click)="getpage();">搜索<i class="anticon anticon-right"></i></button>
+    </nz-button-group>
   </div>
 </ng-template>
 <nz-table #nzTable [nzData]="dataSet" [nzTotal]="page.total" [nzPageIndex]="page.pageIndex" [nzPageSize]="page.pageSize"

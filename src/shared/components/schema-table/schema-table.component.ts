@@ -17,7 +17,7 @@ import { Schema } from '../../../core/declare/schema.class';
   templateUrl: './schema-table.component.html',
   styleUrls: ['./schema-table.component.less']
 })
-export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges {
+export class SchemaTableComponent implements OnInit, AfterContentInit {
 
   private allChecked = false;
   private indeterminate = false;
@@ -29,6 +29,8 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   private showFilter = false;
   private rowActions: any[];
   private tableActions: any[];
+  private filterObj = {};
+  private filterCount = 0;
   private page = new Page();
   private schema = new Schema();
   constructor(
@@ -41,7 +43,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   }
   /// 必须要指定的类型
   @Input() schemaType: string;
-  @Input() filterObj = {};
   @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
@@ -61,8 +62,8 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
     this.refreshStatus();
   }
   clearFilter(): void {
-    this.showFilter = false;
     this.filterObj = {};
+    this.page.filter = null;
     this.getpage();
   }
   sort(sortName: string, value: string): void {
@@ -76,12 +77,11 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
     this.getpage();
   }
   save(item): void {
-    this.loading = true;
+    this.loading = this.httpLoading.value;
     if (this.updateItem.Id == null) {
       this.service.init(this.schemaType).Create(item).subscribe((data) => {
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
-        this.loading = false;
       });
     } else {
       const apply = compare(this.updateItem, item);
@@ -90,7 +90,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
-        this.loading = false;
       });
 
     }
@@ -98,6 +97,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   }
   getpage() {
     this.loading = true;
+    this.filterCount = Object.keys(this.filterObj).filter((k) => this.filterObj[k] && this.filterObj[k].length !== 0).length;
     this.odateFilterFactory.Create(this.schema).CreatePageData(this.page, this.filterObj).subscribe((o) => {
       this.dataSet = o.data;
       this.page.total = o.count;
@@ -116,14 +116,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
     /// 加载表格自定义操作
     this.rowActions = this.actions.filter(x => x.type === 'row');
     this.tableActions = this.actions.filter(x => x.type === 'table');
-  }
-  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
-    Object.keys(changes).forEach((key) => {
-      if (key === 'filterObj') {
-        this.filterObj = changes[key].currentValue;
-        this.getpage();
-      }
-    });
   }
 }
 

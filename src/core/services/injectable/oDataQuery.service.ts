@@ -5,6 +5,7 @@ import { first, switchMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { Page } from '../../declare/page.class';
+import { Query } from 'ngx-odata-v4/objects/query';
 
 @Injectable()
 export class ODataQueryService<T extends EntityBase> {
@@ -48,5 +49,8 @@ class QueryService<T extends EntityBase> {
     }
     public Query(filter?: string, top?: number) {
         return this.odata.Query().Filter(filter).Top(top).Exec();
+    }
+    public QueryBy(query: Query) {
+
     }
 }
