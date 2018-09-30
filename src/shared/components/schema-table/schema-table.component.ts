@@ -23,7 +23,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit, OnChanges
   private allChecked = false;
   private indeterminate = false;
   private visibleDrawer = false;
-  private dataSet: any[];
+  private dataSet: any[] = [];
   private updateItem: any;
   private loading = true;
   private sortMap = {};
