@@ -27,15 +27,16 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   set schema(value: Schema) {
     if (value) {
       this.initValidateForm(value);
+      const editable = value.properties.filter((v) => !v.columnSetting || v.columnSetting.editable !== false);
       this.controls = {
-        text: value.properties.filter((n) =>
+        text: editable.filter((n) =>
           n.type === 'Text' ||
           n.type === 'Select' ||
           n.type === 'Number' ||
           n.type === 'Autocomplete' ||
           n.type === 'Switch' ||
           n.type === 'DateTime'),
-        upload: value.properties.filter((n) => n.type === 'Upload')
+        upload: editable.filter((n) => n.type === 'Upload')
       };
     }
   }
@@ -129,6 +130,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       }
     }
   }
+
   ngOnInit() {
 
   }

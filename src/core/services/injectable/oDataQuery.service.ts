@@ -33,6 +33,7 @@ class QueryService<T extends EntityBase> {
             .Filter(page.filter)
             .Top(page.pageSize)
             .OrderBy(page.orderBy)
+            .Expand(page.expand)
             .ExecWithCount();
     }
     public Create(item: T): Observable<T> {

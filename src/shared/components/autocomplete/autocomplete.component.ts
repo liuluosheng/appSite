@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, forwardRef, Output, EventEmitter } from '@angular/core';
 import { HttpLoading } from '../../../core/services/injectable/httpLoading.service';
 import { ODataQueryService } from '../../../core/services/injectable/oDataQuery.service';
 import { EntityBase } from 'src/shared/dto/EntityBase';
