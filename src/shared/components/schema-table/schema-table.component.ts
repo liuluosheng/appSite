@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, ContentChildren, QueryList, AfterContentInit, SimpleChange, OnChanges, ViewChild } from '@angular/core';
 
 import { compare } from 'fast-json-patch';
 import { HttpClient } from '@angular/common/http';
@@ -10,6 +10,9 @@ import { TableActionComponent } from './schema-table.action.component';
 import { OdataFilterFactory } from 'src/core/services/injectable/oDataFilterFactory.service';
 import { Page } from '../../../core/declare/page.class';
 import { Schema } from '../../../core/declare/schema.class';
+import { SchemaFormComponent } from '../schema-form/schema-form.component';
+import { from } from 'rxjs';
+import { switchMap, filter } from 'rxjs/operators';
 
 
 @Component({
@@ -38,7 +41,6 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
     private httpLoading: HttpLoading,
     private odateFilterFactory: OdataFilterFactory
   ) {
-
   }
   // 指定是否显示新建按钮
   @Input() showCreate = true;
@@ -48,6 +50,7 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
   @Input() schemaType: string;
 
   @ContentChildren(TableActionComponent) actions: QueryList<TableActionComponent>;
+  @ViewChild('asp') formComponent: SchemaFormComponent;
   refreshStatus(): void {
     const allChecked = this.dataSet.filter(value => !value.disabled).every(value => value.checked === true);
     const allUnChecked = this.dataSet.filter(value => !value.disabled).every(value => !value.checked);
@@ -84,13 +87,14 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
   delete(item, rowIndex): void {
     this.loading = this.httpLoading.value;
     this.service.init(this.schemaType).Delete(item.Id).subscribe((data) => {
-     this.dataSet.splice(rowIndex, 1);
+      this.dataSet.splice(rowIndex, 1);
     });
   }
   save(item): void {
     this.loading = this.httpLoading.value;
     if (this.updateItem.Id == null) {
       this.service.init(this.schemaType).Create(item).subscribe((data) => {
+        this.updateAutoComleteValue(data);
         this.dataSet = [data, ...this.dataSet];
         this.visibleDrawer = false;
       });
@@ -99,12 +103,28 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
       if (apply.length === 0) { return; }
       this.service.init(this.schemaType).UpdateByPatch(apply, item.Id).subscribe((data) => {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
+        this.updateAutoComleteValue(data.body);
         this.dataSet[rowIndex] = data.body;
         this.visibleDrawer = false;
       });
-
     }
 
+  }
+  // 更新对象的导航属性，一般由AutoComlete组件指定
+ private updateAutoComleteValue(data) {
+    this.schema.properties.forEach((item) => {
+      if (item.type === 'Autocomplete' && item.columnSetting && item.columnSetting.displayExpression) {
+        from(this.formComponent.autoCompleteComponents.toArray()).pipe(
+          filter((x) => x.schemaType === item.dataType),
+          switchMap((x) => x.optionList)
+        ).subscribe(i => {
+          if (i.Id === data[item.name]) {
+            const prop = item.columnSetting.displayExpression.split('.')[0];
+            data[prop] = i;
+          }
+        });
+      }
+    });
   }
   getpage() {
     this.loading = true;

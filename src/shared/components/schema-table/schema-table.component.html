@@ -5,11 +5,12 @@
       nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...
     </button>
   </nz-badge>
-  <button *ngIf="showCreate" nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i class="anticon anticon-addfile"></i>新建...</button>
+  <button *ngIf="showCreate" nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i
+      class="anticon anticon-addfile"></i>新建...</button>
 </div>
 <ng-template #filterTemplate>
   <div *ngFor="let col of schema.properties" class="filter-item">
-    <ng-container *ngIf="!col.columnSetting || col.columnSetting.searchable!==false">
+    <ng-container *ngIf="col.columnSetting && col.columnSetting.searchable!==false">
       <ng-container *ngIf="col.type=='Number'">
         <nz-input-group nzCompact style="min-width:100px;">
           <input type="text" nz-input placeholder=" {{col.title}} Min" style="width:45%; text-align: center;"
@@ -41,7 +42,7 @@
         </nz-input-group>
       </ng-container>
       <ng-container *ngIf="col.type=='Autocomplete'">
-        <app-autocomplete [schemaType]="col.dataType" [search]="col.search" [labelProp]="col.label" [(ngModel)]="filterObj[col.name]"
+        <app-autocomplete [schemaType]="col.dataType" [search]="col.search" [label]="col.label" [(ngModel)]="filterObj[col.name]"
           (ngModelChange)="getpage()" [placeHolder]="col.title+' - '+col.placeHolder"></app-autocomplete>
       </ng-container>
     </ng-container>
@@ -61,8 +62,10 @@
     <tr class="thead">
       <th nzWidth="30px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate"
         (nzCheckedChange)="checkAll($event)"></th>
-      <th *ngFor="let col of schema.properties" nzWidth="100px" [nzShowSort]="!col.columnSetting || col.columnSetting.sortable!==false"
-        [(nzSort)]="sortMap[col.name]" (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      <ng-container *ngFor="let col of schema.properties">
+        <th *ngIf="col.columnSetting" nzWidth="100px" [nzShowSort]="col.columnSetting.sortable!==false" [(nzSort)]="sortMap[col.name]"
+          (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
+      </ng-container>
       <th nzWidth="40px" class="text-right actions">
         <i class="anticon anticon-bars"></i>
       </th>
@@ -71,23 +74,26 @@
   <tbody>
     <tr *ngFor="let data of nzTable.data;let i=index; " class="data-row">
       <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled" (nzCheckedChange)="refreshStatus($event)"></td>
-      <td *ngFor="let col of schema.properties">
-        <ng-container *ngIf="col.type=='Upload'">
-          <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
-        </ng-container>
-        <ng-container *ngIf="col.type=='Switch'">
-          <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
-        </ng-container>
-        <ng-container *ngIf="col.type=='Text' || col.type=='Number' || col.type=='Select'">
-          {{data[col.name]}}
-        </ng-container>
-        <ng-container *ngIf="col.type=='DateTime'">
-          {{data[col.name]|date:'yyyy-MM-dd HH:mm'}}
-        </ng-container>
-        <ng-container *ngIf="col.type=='Autocomplete' && col.columnSetting && col.columnSetting.displayExpression && data[col.columnSetting.displayExpression.split('.')[0]]">
-          {{data[col.columnSetting.displayExpression.split(".")[0]][col.columnSetting.displayExpression.split(".")[1]]}}
-        </ng-container>
-      </td>
+      <ng-container *ngFor="let col of schema.properties">
+        <td *ngIf="col.columnSetting">
+          <ng-container *ngIf="col.type=='Upload'">
+            <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
+          </ng-container>
+          <ng-container *ngIf="col.type=='Switch'">
+            <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
+          </ng-container>
+          <ng-container *ngIf="col.type=='Text' || col.type=='Number' || col.type=='Select'">
+            {{data[col.name]}}
+          </ng-container>
+          <ng-container *ngIf="col.type=='DateTime'">
+            {{data[col.name]|date:'yyyy-MM-dd HH:mm'}}
+          </ng-container>
+          <ng-container *ngIf="col.type=='Autocomplete' && col.columnSetting.displayExpression && data[col.columnSetting.displayExpression.split('.')[0]]">
+            {{data[col.columnSetting.displayExpression.split(".")[0]][col.columnSetting.displayExpression.split(".")[1]]}}
+          </ng-container>
+        </td>
+      </ng-container>
+
       <td nzWidth="80px" nzRight="0px" class="text-right actions">
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
@@ -95,7 +101,7 @@
           </a>
           <ul nz-menu>
             <li nz-menu-item>
-              <a nz-popconfirm nzTitle="确定要删除?"  nzPlacement="left" (nzOnConfirm)="delete(data,i)"><i class="anticon anticon-delete"></i>删除</a>
+              <a nz-popconfirm nzTitle="确定要删除?" nzPlacement="left" (nzOnConfirm)="delete(data,i)"><i class="anticon anticon-delete"></i>删除</a>
             </li>
             <li nz-menu-item>
               <a (click)=" updateItem=data; visibleDrawer=true;"><i class="anticon anticon-edit"></i>编辑...</a>
