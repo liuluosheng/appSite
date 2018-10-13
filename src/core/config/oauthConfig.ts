@@ -1,11 +1,12 @@
 import { AuthConfig } from 'angular-oauth2-oidc';
+import { environment } from 'src/environments/environment';
 
 export const oAuthConfig: AuthConfig = {
 
     // Url of the Identity Provider
-    issuer: 'http://localhost:5000',
-    tokenEndpoint: 'http://localhost:5000/connect/token',
-    userinfoEndpoint: 'http://localhost:5000/connect/userinfo',
+    issuer: environment.identityServer,
+    tokenEndpoint: `${environment.identityServer}/connect/token`,
+    userinfoEndpoint: `${environment.identityServer}/connect/userinfo`,
     // URL of the SPA to redirect the user to after login
     redirectUri: '',
     logoutUrl: '/login',
