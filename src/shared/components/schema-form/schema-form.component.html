@@ -26,7 +26,7 @@
             </nz-select>
           </ng-container>
           <ng-container *ngIf="item.type=='Autocomplete'">
-            <app-autocomplete [schemaType]="item.dataType" [search]="item.search" [labelProp]="item.label"
+            <app-autocomplete [schemaType]="item.dataType" [search]="item.search" [label]="item.label" 
               [formControlName]="item.name" [placeHolder]="item.placeHolder"></app-autocomplete>
           </ng-container>
           <ng-container *ngIf="item.type=='Number'">

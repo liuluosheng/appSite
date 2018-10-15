@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChange, OnChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange, OnChanges, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,6 +7,7 @@ import {
 import { deepClone } from 'fast-json-patch/lib/core';
 import { environment } from '../../../environments/environment';
 import { Schema } from '../../../core/declare/schema.class';
+import { AutocompleteComponent } from '../autocomplete/autocomplete.component';
 
 
 
@@ -27,15 +28,16 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   set schema(value: Schema) {
     if (value) {
       this.initValidateForm(value);
+      const editable = value.properties.filter((v) => !v.columnSetting || v.columnSetting.editable !== false);
       this.controls = {
-        text: value.properties.filter((n) =>
+        text: editable.filter((n) =>
           n.type === 'Text' ||
           n.type === 'Select' ||
           n.type === 'Number' ||
           n.type === 'Autocomplete' ||
           n.type === 'Switch' ||
           n.type === 'DateTime'),
-        upload: value.properties.filter((n) => n.type === 'Upload')
+        upload: editable.filter((n) => n.type === 'Upload')
       };
     }
   }
@@ -49,6 +51,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
   @Output() formSumbit = new EventEmitter<any>();
   constructor(private fb: FormBuilder) {
   }
+  @ViewChildren(AutocompleteComponent) autoCompleteComponents: QueryList<AutocompleteComponent>;
   /// 表单提交
   submit() {
     Object.keys(this.validateForm.controls).forEach((i) => {
@@ -129,6 +132,7 @@ export class SchemaFormComponent implements OnInit, OnChanges {
       }
     }
   }
+
   ngOnInit() {
 
   }

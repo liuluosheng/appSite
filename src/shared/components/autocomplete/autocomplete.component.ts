@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, forwardRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, forwardRef, Output, EventEmitter } from '@angular/core';
 import { HttpLoading } from '../../../core/services/injectable/httpLoading.service';
 import { ODataQueryService } from '../../../core/services/injectable/oDataQuery.service';
 import { EntityBase } from 'src/shared/dto/EntityBase';
@@ -20,11 +20,11 @@ import { NzSelectComponent } from 'ng-zorro-antd';
 })
 export class AutocompleteComponent implements ControlValueAccessor, OnInit {
   @Input() schemaType: string; // 表示实体类
-  @Input() labelProp: string; // 表示选择后显示在文本框中的属性
+  @Input() label: string; // 表示选择后显示在文本框中的属性
   @Input() search: string; // 表示要按哪些属性来进行搜索
   @Input() placeHolder: string;
   @ViewChild(NzSelectComponent)
-  private nzSelectComponent: NzSelectComponent;
+   nzSelectComponent: NzSelectComponent;
   optionList: any[] = [];
   get searchs() {
     return this.search.split(',');

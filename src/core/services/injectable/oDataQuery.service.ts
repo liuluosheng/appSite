@@ -2,24 +2,26 @@ import { ODataServiceFactory, ODataService, ODataPagedResult } from 'angular-oda
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { first, switchMap } from 'rxjs/operators';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpClient } from '@angular/common/http';
 import { EntityBase } from 'src/shared/dto/EntityBase';
 import { Page } from '../../declare/page.class';
 import { Query } from 'ngx-odata-v4/objects/query';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable()
 export class ODataQueryService<T extends EntityBase> {
     private odata: ODataService<T>;
-    constructor(private oDataService: ODataServiceFactory) {
+    constructor(private oDataService: ODataServiceFactory, private httpClient: HttpClient) {
     }
     public init(type: string): QueryService<T> {
         this.odata = this.oDataService.CreateService<T>(type);
-        return new QueryService<T>(this.odata);
+        return new QueryService<T>(this.odata, this.httpClient);
     }
 }
 
 class QueryService<T extends EntityBase> {
-    constructor(private odata: ODataService<T>) {
+    constructor(private odata: ODataService<T>, private httpClient: HttpClient) {
     }
     public GetById(id: any): Observable<T> {
         return this.odata.Get(id).Exec().pipe(
@@ -33,6 +35,7 @@ class QueryService<T extends EntityBase> {
             .Filter(page.filter)
             .Top(page.pageSize)
             .OrderBy(page.orderBy)
+            .Expand(page.expand)
             .ExecWithCount();
     }
     public Create(item: T): Observable<T> {
@@ -50,7 +53,9 @@ class QueryService<T extends EntityBase> {
     public Query(filter?: string, top?: number) {
         return this.odata.Query().Filter(filter).Top(top).Exec();
     }
-    public QueryBy(query: Query) {
-
+    // QueryBy方法使得示例：https://github.com/skynet2/ngx-odata
+    public QueryBy(query: Query): Observable<T> {
+        const  generatedUrl = `${environment.oDataBaseUrl}/${this.odata.TypeName}?${query.compile()}`;
+        return this.httpClient.get<T>(generatedUrl);
     }
 }

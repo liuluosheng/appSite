@@ -4,7 +4,7 @@
       <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-control>
-            <nz-input-group nzPrefixIcon="anticon anticon-user">
+            <nz-input-group nzPrefixIcon="anticon anticon-user"  nzSize="large">
               <input type="text" nz-input formControlName="userName" placeholder="Username">
             </nz-input-group>
             <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">请正确输入你的用户名!</nz-form-explain>
@@ -12,8 +12,8 @@
         </nz-form-item>
         <nz-form-item>
           <nz-form-control>
-            <nz-input-group nzPrefixIcon="anticon anticon-lock">
-              <input type="password" nz-input formControlName="password" placeholder="Password">
+            <nz-input-group nzPrefixIcon="anticon anticon-lock" nzSize="large">
+              <input type="password" nz-input formControlName="password" placeholder="Password" >
             </nz-input-group>
             <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请正确输入你的密码!</nz-form-explain>
           </nz-form-control>

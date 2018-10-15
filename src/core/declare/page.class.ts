@@ -4,4 +4,5 @@ export class Page {
     total: number;
     orderBy = 'CreatedDate desc';
     filter?: string;
+    expand?: [];
 }
