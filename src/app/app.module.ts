@@ -10,8 +10,7 @@ import { registerLocaleData } from '@angular/common';
 import zh from '@angular/common/locales/zh';
 import { SysModule } from './sys/sys.module';
 import { WmsModule } from './wms/wms.module';
-import { OAuthModule, OAuthService, JwksValidationHandler } from 'angular-oauth2-oidc';
-import { oAuthConfig } from '../core/config/oauthConfig';
+import { OAuthModule } from 'angular-oauth2-oidc';
 import { environment } from '../environments/environment';
 import { CoreModule } from '../core/core.module';
 
@@ -33,7 +32,7 @@ registerLocaleData(zh);
     SysModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: environment.oauthSendTokenUrl,
+        allowedUrls: [environment.apiUrl, environment.oDataBaseUrl],
         sendAccessToken: true
       }
     })
@@ -41,8 +40,4 @@ registerLocaleData(zh);
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private oauthService: OAuthService) {
-    this.oauthService.configure(oAuthConfig);
-    this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-  }
 }

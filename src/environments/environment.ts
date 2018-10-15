@@ -1,14 +1,13 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
+const apiUrl = 'http://localhost:8000';
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8000',
-  oDataBaseUrl: 'http://localhost:8000/odata',
-  jsonSchemaUrl: 'http://localhost:8000/api/jsonschema',
-  // 可以自动上传token的url
-  oauthSendTokenUrl: ['http://localhost:8000/api', 'http://localhost:8000/odata']
+  apiUrl: apiUrl,
+  oDataBaseUrl: `${apiUrl}/odata`,
+  jsonSchemaUrl: `${apiUrl}/api/jsonschema`,
+  identityUrl: 'http://localhost:5000'
 };
 
 /*
