@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
         this.validateForm.get('password').value).then((re) => {
           this.router.navigate(['/']);
           this.isSpinning = false;
-        }).catch(() => {
+        }).catch((re) => {
           this.isSpinning = false;
           this.notification.error('Error', '登录失败，密码输错了吧！');
         });

@@ -9,6 +9,7 @@ export const oAuthConfig: AuthConfig = {
     redirectUri: '',
     logoutUrl: '/login',
     loginUrl: '/login',
+    oidc: false,
     // Login-Url
     tokenEndpoint: `${environment.identityUrl}/connect/token`,
     // Url with user info endpoint
@@ -21,7 +22,7 @@ export const oAuthConfig: AuthConfig = {
     clientId: 'ro.client',
 
     // set the scope for the permissions the client should request
-    scope: 'openid profile email voucher offline_access api',
+    scope: 'openid profile api',
 
     // Set a dummy secret
     // Please note that the auth-server used here demand the client to transmit a client secret, although

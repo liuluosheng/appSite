@@ -10,6 +10,7 @@ import { PartComponent } from '../wms/part/part.component';
 import { DefaultLayoutComponent } from './layout/default/default.component';
 import { OrdersComponent } from '../wms/orders/orders.component';
 import { UsersComponent } from './identity/users/users.component';
+import { SysMenuComponent } from './identity/sys-menu/sys-menu.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
   {
     path: 'identity', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
-      { path: 'users', component: UsersComponent, data: { title: 'users' } }
+      { path: 'users', component: UsersComponent, data: { title: 'users' } },
+      { path: 'menus', component: SysMenuComponent, data: { title: 'menus' } }
     ]
   },
   { path: 'login', component: LoginComponent },
