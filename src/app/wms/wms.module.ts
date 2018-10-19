@@ -5,6 +5,7 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { PartComponent } from './part/part.component';
 import { OrdersComponent } from './orders/orders.component';
 import { SharedModule } from '../../shared/shared.module';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   imports: [
@@ -12,6 +13,6 @@ import { SharedModule } from '../../shared/shared.module';
     SharedModule,
     NgZorroAntdModule
   ],
-  declarations: [DashboardComponent, PartComponent, OrdersComponent]
+  declarations: [DashboardComponent, PartComponent, OrdersComponent, TestComponent]
 })
 export class WmsModule { }

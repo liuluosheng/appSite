@@ -8,5 +8,10 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+  const bootstrap = () => {
+    return platformBrowserDynamic().bootstrapModule(AppModule);
+  };
+
+  bootstrap().then(() => {
+      document.querySelector('.preloader').className  = 'preloader-hidden';
+  }) .catch(err => console.log(err));

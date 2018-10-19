@@ -11,6 +11,7 @@ import { DefaultLayoutComponent } from './layout/default/default.component';
 import { OrdersComponent } from '../wms/orders/orders.component';
 import { UsersComponent } from './identity/users/users.component';
 import { SysMenuComponent } from './identity/sys-menu/sys-menu.component';
+import { TestComponent } from '../wms/test/test.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,7 @@ const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent, data: { title: 'dashboard' } },
       { path: 'part', component: PartComponent, data: { title: 'part' } },
+      { path: 'test', component: TestComponent, data: { title: 'test' } },
       { path: 'orders', component: OrdersComponent, data: { title: 'orders' } }
     ]
   },
