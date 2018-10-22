@@ -4,6 +4,7 @@ import { findIndex } from 'rxjs/operators';
 import { from } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { oAuthConfig } from '../../../../core/config/oauthConfig';
+import { SystemMenu } from 'src/shared/dto/SystemMenu';
 @Component({
   selector: 'app-layout-default',
   templateUrl: './default.component.html',
@@ -11,7 +12,8 @@ import { oAuthConfig } from '../../../../core/config/oauthConfig';
 })
 export class DefaultLayoutComponent implements OnInit {
 
-  constructor(protected router: Router,
+  constructor(
+    protected router: Router,
     private authService: OAuthService,
     protected route: ActivatedRoute) {
   }
@@ -19,6 +21,7 @@ export class DefaultLayoutComponent implements OnInit {
   triggerTemplate = null;
   tabs: any[] = [];
   tabSelectIndex = 0;
+  menus: any[] = [{Url: '/404', Name: '404'}];
   @ViewChild('trigger') customTrigger: TemplateRef<void>;
   navigate(url): void {
     this.router.navigate([url]);

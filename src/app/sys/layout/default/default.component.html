@@ -6,6 +6,21 @@
     </div>
     <ng-scrollbar>
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+        <ng-container *ngFor="let menu of menus">
+          <ng-container *ngIf="!menu.Items || menu.Items.length==0; else elseTemplate">
+            <li nz-menu-item routerLink="menu.Url" routerLinkActive="active" [nzSelected]="selected(menu.Url)">
+              <span>
+                <i class="anticon anticon-dashboard"></i>
+                <span class="nav-text">
+                  {{menu.Name}}
+                </span>
+              </span>
+            </li>
+          </ng-container>
+          <ng-template #elseTemplate>
+
+          </ng-template>
+        </ng-container>
         <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')">
           <span>
             <i class="anticon anticon-dashboard"></i>
@@ -26,7 +41,7 @@
             <li nz-menu-item routerLink="/wms/part" routerLinkActive="active" [nzSelected]="selected('/wms/part')">
               <span class=" nav-text ">Part</span>
             </li>
-            <li nz-menu-item routerLink="/wms/test" routerLinkActive="active" [nzSelected]="selected('/wms/test')">  
+            <li nz-menu-item routerLink="/wms/test" routerLinkActive="active" [nzSelected]="selected('/wms/test')">
               <span class=" nav-text ">Test</span>
             </li>
             <li nz-menu-item routerLink="/wms/orders" routerLinkActive="active" [nzSelected]="selected('/wms/orders')">
