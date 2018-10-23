@@ -14,6 +14,7 @@ import { ScrollbarModule } from 'ngx-scrollbar';
 import { UsersComponent } from './identity/users/users.component';
 import { SharedModule } from '../../shared/shared.module';
 import { SysMenuComponent } from './identity/sys-menu/sys-menu.component';
+import { MenuComponent } from './layout/default/menu.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -31,6 +32,7 @@ import { SysMenuComponent } from './identity/sys-menu/sys-menu.component';
     LoginComponent,
     DefaultLayoutComponent,
     UsersComponent,
+    MenuComponent,
     SysMenuComponent]
 })
 export class SysModule { }

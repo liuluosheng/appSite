@@ -5,6 +5,8 @@ import { from } from 'rxjs';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { oAuthConfig } from '../../../../core/config/oauthConfig';
 import { SystemMenu } from 'src/shared/dto/SystemMenu';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-layout-default',
   templateUrl: './default.component.html',
@@ -14,6 +16,7 @@ export class DefaultLayoutComponent implements OnInit {
 
   constructor(
     protected router: Router,
+    private httpClient: HttpClient,
     private authService: OAuthService,
     protected route: ActivatedRoute) {
   }
@@ -21,7 +24,7 @@ export class DefaultLayoutComponent implements OnInit {
   triggerTemplate = null;
   tabs: any[] = [];
   tabSelectIndex = 0;
-  menus: any[] = [{Url: '/404', Name: '404'}];
+  menus: any[];
   @ViewChild('trigger') customTrigger: TemplateRef<void>;
   navigate(url): void {
     this.router.navigate([url]);
@@ -49,6 +52,9 @@ export class DefaultLayoutComponent implements OnInit {
     this.router.navigateByUrl(oAuthConfig.logoutUrl);
   }
   ngOnInit() {
+    this.httpClient.get(`${environment.apiUrl}/systemmenu`).subscribe((data: any) => {
+      this.menus = data;
+    });
     /// tab页的绑定
     this.tabs = [...this.tabs, { title: this.route.firstChild.snapshot.data.title, url: this.router.url }];
     this.router.events.subscribe(event => {
