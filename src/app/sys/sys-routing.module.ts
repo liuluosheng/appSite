@@ -17,28 +17,26 @@ const routes: Routes = [
   {
     path: '', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: IndexComponent, data: { title: 'index' } }
-    ]
-
-  },
-
-  {
-    path: 'identity', component: DefaultLayoutComponent, canActivate: [AuthGuard],
-    children: [
-      { path: 'users', component: UsersComponent, data: { title: 'users' } },
-      { path: 'menus', component: SysMenuComponent, data: { title: 'menus' } }
+      { path: '', component: IndexComponent, data: { title: 'index' } },
+      {
+        path: 'identity', canActivate: [AuthGuard],
+        children: [
+          { path: 'users', component: UsersComponent, data: { title: 'users' } },
+          { path: 'menus', component: SysMenuComponent, data: { title: 'menus' } }
+        ]
+      },
+      {
+        path: 'wms', canActivate: [AuthGuard],
+        children: [
+          { path: '', component: DashboardComponent, data: { title: 'dashboard' } },
+          { path: 'part', component: PartComponent, data: { title: 'part' } },
+          { path: 'test', component: TestComponent, data: { title: 'test' } },
+          { path: 'orders', component: OrdersComponent, data: { title: 'orders' } }
+        ]
+      }
     ]
   },
   { path: 'login', component: LoginComponent },
-  {
-    path: 'wms', component: DefaultLayoutComponent, canActivate: [AuthGuard],
-    children: [
-      { path: '', component: DashboardComponent, data: { title: 'dashboard' } },
-      { path: 'part', component: PartComponent, data: { title: 'part' } },
-      { path: 'test', component: TestComponent, data: { title: 'test' } },
-      { path: 'orders', component: OrdersComponent, data: { title: 'orders' } }
-    ]
-  },
   { path: '404', component: Exception404Component },
   { path: '403', component: Exception403Component },
   { path: '**', component: Exception404Component }
