@@ -5,8 +5,7 @@ import { Component, OnInit, Input } from '@angular/core';
     selector: '[app-menu]',
     template: `
     <ng-container *ngFor="let menu of menus">
-        <li nz-menu-item routerLink="menu.Url"
-         routerLinkActive="active" [nzSelected]="selected(menu.Url)" *ngIf="menu.Items.length==0">
+        <li nz-menu-item routerLink="menu.Url" routerLinkActive="active" [nzSelected]="" *ngIf="menu.Items.length==0">
           <span>
             <i class="anticon anticon-dashboard"></i>
             <span class="nav-text">
@@ -19,8 +18,7 @@ import { Component, OnInit, Input } from '@angular/core';
             <i class="anticon anticon-user"></i>
             <span class="nav-text">{{menu.Name}}</span>
           </span>
-          <ul app-menu [menus]="menu.Items">
-          </ul>
+          <ul app-menu [menus]="menu.Items"></ul>
         </li>
 
     </ng-container>

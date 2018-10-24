@@ -5,23 +5,9 @@
       <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed" (click)="isCollapsed=!isCollapsed"></i>
     </div>
     <ng-scrollbar>
+      <ul nz-menu  app-menu [menus]="menus" [nzTheme]="'dark'" nzMode="inline" [nzInlineCollapsed]="isCollapsed"> </ul>
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
-        <ng-container *ngFor="let menu of menus">
-          <ng-container *ngIf="!menu.Items || menu.Items.length==0; else elseTemplate">
-            <li nz-menu-item routerLink="menu.Url" routerLinkActive="active" [nzSelected]="selected(menu.Url)">
-              <span>
-                <i class="anticon anticon-dashboard"></i>
-                <span class="nav-text">
-                  {{menu.Name}}
-                </span>
-              </span>
-            </li>
-          </ng-container>
-          <ng-template #elseTemplate>
-
-          </ng-template>
-        </ng-container>
-        <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')">
+        <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')" >
           <span>
             <i class="anticon anticon-dashboard"></i>
             <span class="nav-text">
