@@ -1,4 +1,4 @@
-import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { NgModule, Optional, SkipSelf, APP_INITIALIZER } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd';
 import { AuthConfig } from 'angular-oauth2-oidc';
@@ -12,14 +12,32 @@ import { HttpLoading } from './services/injectable/httpLoading.service';
 import { ODataQueryService } from './services/injectable/oDataQuery.service';
 import { throwIfAlreadyLoaded } from './services/guard/module.import.guard';
 import { OdataFilterFactory } from './services/injectable/oDataFilterFactory.service';
+import { StartupService } from './services/injectable/startup.service';
+import { SettingService } from './services/injectable/setting.service';
 
 
+const APPINIT_PROVIDES = [
+  StartupService,
+  {
+    provide: APP_INITIALIZER,
+    useFactory: StartupServiceFactory,
+    deps: [StartupService],
+    multi: true,
+  },
+];
+
+export function StartupServiceFactory(
+  startupService: StartupService,
+): Function {
+  return () => startupService.load();
+}
 
 @NgModule({
   imports: [
     CommonModule
   ],
   providers: [
+    ...APPINIT_PROVIDES,
     { provide: NZ_I18N, useValue: zh_CN },
     { provide: AuthConfig, useValue: oAuthConfig },
     { provide: ODataConfiguration, useClass: ODataConfigurationFactory },
@@ -28,7 +46,8 @@ import { OdataFilterFactory } from './services/injectable/oDataFilterFactory.ser
     AuthGuard,
     ODataQueryService,
     ODataServiceFactory,
-    OdataFilterFactory
+    OdataFilterFactory,
+    SettingService
   ],
 })
 /// CoreModule为服务定义模块 仅在AppModule模块中导入且仅允许导入一次
@@ -37,3 +56,5 @@ export class CoreModule {
     throwIfAlreadyLoaded(parentModule, 'CoreModule');
   }
 }
+
+

@@ -5,84 +5,8 @@
       <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed" (click)="isCollapsed=!isCollapsed"></i>
     </div>
     <ng-scrollbar>
-      <ul nz-menu  app-menu [menus]="menus" [nzTheme]="'dark'" nzMode="inline" [nzInlineCollapsed]="isCollapsed"> </ul>
       <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
-        <li nz-menu-item routerLink="/wms" routerLinkActive="active" [nzSelected]="selected('/wms')" >
-          <span>
-            <i class="anticon anticon-dashboard"></i>
-            <span class="nav-text">
-              Dashboard
-            </span>
-          </span>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-user"></i>
-            <span class="nav-text">User</span>
-          </span>
-          <ul>
-            <li nz-menu-item>
-              <a routerLink="/404" routerLinkActive="active">404</a>
-            </li>
-            <li nz-menu-item routerLink="/wms/part" routerLinkActive="active" [nzSelected]="selected('/wms/part')">
-              <span class=" nav-text ">Part</span>
-            </li>
-            <li nz-menu-item routerLink="/wms/test" routerLinkActive="active" [nzSelected]="selected('/wms/test')">
-              <span class=" nav-text ">Test</span>
-            </li>
-            <li nz-menu-item routerLink="/wms/orders" routerLinkActive="active" [nzSelected]="selected('/wms/orders')">
-              <span class=" nav-text ">Orders</span>
-            </li>
-            <li nz-menu-item>Alex</li>
-          </ul>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-team "></i>
-            <span class="nav-text ">system</span>
-          </span>
-          <ul>
-            <li nz-menu-item routerLink="/identity/users" routerLinkActive="active" [nzSelected]="selected('/identity/users')">Users</li>
-            <li nz-menu-item routerLink="/identity/menus" routerLinkActive="active" [nzSelected]="selected('/identity/menus')">Menus</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-team "></i>
-            <span class="nav-text ">Team</span>
-          </span>
-          <ul>
-            <li nz-menu-item>Team 1</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-team "></i>
-            <span class="nav-text ">Team</span>
-          </span>
-          <ul>
-            <li nz-menu-item>Team 1</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
-        <li nz-submenu>
-          <span title>
-            <i class="anticon anticon-team "></i>
-            <span class="nav-text ">Team</span>
-          </span>
-          <ul>
-            <li nz-menu-item>Team 1</li>
-            <li nz-menu-item>Team 2</li>
-          </ul>
-        </li>
-        <li nz-menu-item>
-          <span>
-            <i class="anticon anticon-file "></i>
-            <span class="nav-text ">File</span>
-          </span>
-        </li>
+        <app-menu [menus]="menus" (select)="select($event)"></app-menu>
       </ul>
     </ng-scrollbar>
   </nz-sider>
@@ -144,6 +68,3 @@
   </nz-layout>
 </nz-layout>
 
-<ng-template #trigger>
-  <i class="anticon anticon-up "></i>
-</ng-template>

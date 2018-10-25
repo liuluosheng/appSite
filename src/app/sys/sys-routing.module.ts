@@ -17,21 +17,21 @@ const routes: Routes = [
   {
     path: '', component: DefaultLayoutComponent, canActivate: [AuthGuard],
     children: [
-      { path: '', component: IndexComponent, data: { title: 'index' } },
+      { path: '', component: IndexComponent },
       {
         path: 'identity', canActivate: [AuthGuard],
         children: [
-          { path: 'users', component: UsersComponent, data: { title: 'users' } },
-          { path: 'menus', component: SysMenuComponent, data: { title: 'menus' } }
+          { path: 'users', component: UsersComponent },
+          { path: 'menus', component: SysMenuComponent }
         ]
       },
       {
         path: 'wms', canActivate: [AuthGuard],
         children: [
-          { path: '', component: DashboardComponent, data: { title: 'dashboard' } },
-          { path: 'part', component: PartComponent, data: { title: 'part' } },
-          { path: 'test', component: TestComponent, data: { title: 'test' } },
-          { path: 'orders', component: OrdersComponent, data: { title: 'orders' } }
+          { path: '', component: DashboardComponent },
+          { path: 'part', component: PartComponent },
+          { path: 'test', component: TestComponent },
+          { path: 'orders', component: OrdersComponent }
         ]
       }
     ]
