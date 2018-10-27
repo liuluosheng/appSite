@@ -5,6 +5,6 @@
     </nz-option>
   </ng-container>
   <nz-option *ngIf="loading.value" nzDisabled nzCustomContent>
-    <i class="anticon anticon-loading anticon-spin loading-icon"></i> 数据加载中...
+      <i nz-icon [type]="'loading'"></i> 数据加载中...
   </nz-option>
 </nz-select>

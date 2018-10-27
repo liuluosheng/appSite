@@ -1,12 +1,13 @@
 <div class="table_actions">
-  <button nz-button nzType="primary" *ngFor="let x of tableActions" (click)="x.open(nzTable.data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</button>
+  <button nz-button nzType="primary" *ngFor="let x of tableActions" (click)="x.open(nzTable.data);">
+      <i nz-icon type="x.icon" theme="outline"></i>{{x.name}}...</button>
   <nz-badge [nzCount]="filterCount" class="filter-count" *ngIf="showSearch">
     <button nz-button nz-popover nzType="primary" nzTitle="查询" [(nzVisible)]="visible" nzTrigger="click" [nzContent]="filterTemplate"
-      nzPlacement="bottomRight"><i class="anticon anticon-filter"></i>查询...
+      nzPlacement="bottomRight"><i nz-icon type="filter" theme="outline"></i>查询...
     </button>
   </nz-badge>
-  <button *ngIf="showCreate" nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;"><i
-      class="anticon anticon-addfile"></i>新建...</button>
+  <button *ngIf="showCreate" nz-button nzType="primary" (click)="asp.reset(); updateItem={};visibleDrawer=true;">
+      <i nz-icon type="plus" theme="outline"></i> 新建...</button>
 </div>
 <ng-template #filterTemplate>
   <div *ngFor="let col of schema.properties" class="filter-item">
@@ -37,7 +38,7 @@
           (ngModelChange)="getpage()" ngModel [nzFormat]="dateFormat" style='width: 100%'></nz-range-picker>
       </ng-container>
       <ng-container *ngIf="col.type=='Text'">
-        <nz-input-group nzSuffixIcon="anticon anticon-search" nzAllowClear>
+        <nz-input-group [nzSuffix]="suffixIconButton" nzAllowClear>
           <input nz-input id=" name" [(ngModel)]="filterObj[col.name]" autocomplete="off" placeholder="{{col.title}}">
         </nz-input-group>
       </ng-container>
@@ -46,12 +47,14 @@
           (ngModelChange)="getpage()" [placeHolder]="col.title+' - '+col.placeHolder"></app-autocomplete>
       </ng-container>
     </ng-container>
-
+    <ng-template #suffixButton>
+        <button nz-button nzType="primary" nzSize="large" nzSearch>Search</button>
+      </ng-template>
   </div>
   <div class="filter-btn-warp">
     <nz-button-group>
-      <button nz-button nzType="primary" (click)="clearFilter();"><i class="anticon anticon-left"></i>取消</button>
-      <button nz-button nzType="primary" (click)="getpage();">搜索<i class="anticon anticon-right"></i></button>
+      <button nz-button nzType="primary" (click)="clearFilter();"><i nz-icon type="left"></i>取消</button>
+      <button nz-button nzType="primary" (click)="getpage();">搜索<i nz-icon type="right"></i></button>
     </nz-button-group>
   </div>
 </ng-template>
@@ -67,7 +70,7 @@
           (nzSortChange)="sort(col.name,$event)">{{col.title}}</th>
       </ng-container>
       <th nzWidth="40px" class="text-right actions">
-        <i class="anticon anticon-bars"></i>
+          <i nz-icon type="bars" theme="outline"></i>
       </th>
     </tr>
   </thead>
@@ -77,10 +80,11 @@
       <ng-container *ngFor="let col of schema.properties">
         <td *ngIf="col.columnSetting">
           <ng-container *ngIf="col.type=='Upload'">
-            <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle"><i class="anticon anticon-download"></i></a>
+            <a [href]="transformUrl(data[col.name])" *ngIf="data[col.name]" nz-button nzShape="circle">
+                <i nz-icon type="download" theme="outline"></i></a>
           </ng-container>
           <ng-container *ngIf="col.type=='Switch'">
-            <i class="switch-icon anticon {{data[col.name]?'anticon-check-circle red':'anticon-close-circle'}}"></i>
+              <i nz-icon [type]="data[col.name]?'check-circle':'close-circle'" theme="outline" class="switch-icon"></i>
           </ng-container>
           <ng-container *ngIf="col.type=='Text' || col.type=='Number' || col.type=='Select'">
             {{data[col.name]}}
@@ -97,18 +101,21 @@
       <td nzWidth="80px" nzRight="0px" class="text-right actions">
         <nz-dropdown [nzPlacement]="'bottomRight'">
           <a nz-dropdown>
-            <strong><i class="anticon anticon-ellipsis"></i></strong>
+            <strong><i nz-icon type="ellipsis" theme="outline"></i></strong>
           </a>
           <ul nz-menu>
             <li nz-menu-item>
-              <a nz-popconfirm nzTitle="确定要删除?" nzPlacement="left" (nzOnConfirm)="delete(data,i)"><i class="anticon anticon-delete"></i>删除</a>
+              <a nz-popconfirm nzTitle="确定要删除?" nzPlacement="left" (nzOnConfirm)="delete(data,i)">
+                  <i nz-icon type="delete" theme="outline"></i>删除</a>
             </li>
             <li nz-menu-item>
-              <a (click)=" updateItem=data; visibleDrawer=true;"><i class="anticon anticon-edit"></i>编辑...</a>
+              <a (click)=" updateItem=data; visibleDrawer=true;">
+                <i nz-icon type="edit" theme="outline"></i>编辑...</a>
             </li>
             <li nz-menu-divider></li>
             <li nz-menu-item *ngFor="let x of rowActions">
-              <a (click)="x.open(data);"><i class="anticon {{x.icon}}"></i>{{x.name}}...</a>
+               
+              <a (click)="x.open(data);">  <i nz-icon type="x.icon" theme="outline"></i>{{x.name}}...</a>
             </li>
           </ul>
         </nz-dropdown>

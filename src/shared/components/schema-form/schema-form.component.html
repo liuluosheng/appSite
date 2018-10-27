@@ -5,9 +5,7 @@
         <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
           <span>
             {{item.title}}
-            <nz-tooltip [nzTitle]="item.description" *ngIf="item.description">
-              <i nz-tooltip class="anticon anticon-question-circle-o"></i>
-            </nz-tooltip>
+            <i nz-icon nz-tooltip [nzTitle]="item.description" type="question-circle" theme="outline" *ngIf="item.description"></i>
           </span>
         </nz-form-label>
         <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
@@ -51,16 +49,14 @@
       <nz-form-label [nzSpan]="layout=='horizontal'?8:null" [nzRequired]="item.required">
         <span>
           {{item.title}}
-          <nz-tooltip [nzTitle]="item.description" *ngIf="item.description">
-            <i nz-tooltip class="anticon anticon-question-circle-o"></i>
-          </nz-tooltip>
+          <i nz-icon nz-tooltip [nzTitle]="item.description" type="question-circle" theme="outline" *ngIf="item.description"></i>   
         </span>
       </nz-form-label>
       <nz-form-control [nzSpan]="layout=='horizontal'?16:null">
         <nz-upload [nzAction]="item.action" [nzFileType]="item.fileType" (nzChange)="fileUpload($event,item)"
           [nzFileList]="uploadFileList[item.name]">
           <button nz-button type="button">
-            <i class="anticon anticon-upload"></i><span>{{item.buttonText}}</span>
+            <i nz-icon type="upload"></i><span>{{item.buttonText}}</span>
           </button>
         </nz-upload>
         <nz-form-explain *ngIf="validateForm.get(item.name)?.dirty && validateForm.get(item.name)?.errors">

@@ -4,7 +4,7 @@ import { NZ_I18N, zh_CN } from 'ng-zorro-antd';
 import { AuthConfig } from 'angular-oauth2-oidc';
 import { oAuthConfig } from './config/oauthConfig';
 import { ODataConfiguration, ODataServiceFactory } from 'angular-odata-es5';
-import { ODataConfigurationFactory } from './config/odataConfig';
+import {  ApiOdataConfig } from './config/odataConfig';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { DefaultInterceptor } from './services/interceptor/default.interceptor';
 import { AuthGuard } from './services/guard/auth.guard';
@@ -40,7 +40,7 @@ export function StartupServiceFactory(
     ...APPINIT_PROVIDES,
     { provide: NZ_I18N, useValue: zh_CN },
     { provide: AuthConfig, useValue: oAuthConfig },
-    { provide: ODataConfiguration, useClass: ODataConfigurationFactory },
+    { provide: ODataConfiguration, useClass: ApiOdataConfig },
     { provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true },
     { provide: HttpLoading, useClass: HttpLoading },
     AuthGuard,

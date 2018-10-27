@@ -2,11 +2,12 @@
 
   <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate" class="fixed-sider">
     <div class="anticons">
-      <i class="anticon" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed" (click)="isCollapsed=!isCollapsed"></i>
+        <i class="anticon" nz-icon [type]="isCollapsed?'menu-unfold':'menu-fold'" (click)="isCollapsed=!isCollapsed"></i>
+     
     </div>
     <ng-scrollbar>
-      <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
-        <app-menu [menus]="menus" (select)="select($event)"></app-menu>
+      <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed" app-menu [menus]="menus" (select)="select($event)">
+  
       </ul>
     </ng-scrollbar>
   </nz-sider>
@@ -22,7 +23,7 @@
               <nz-tab *ngFor="let tab of tabs;let i=index; " [nzTitle]="titleTemplate" (nzClick)=navigate(tab.url)>
                 <ng-template #titleTemplate>
                   <div>{{ tab.title }}
-                    <i class="anticon anticon-close" (click)="closeTab(i,tab)"></i>
+                      <i nz-icon type="close" (click)="closeTab(i,tab)" class="ant-tabs-close-x"></i>
                   </div>
                 </ng-template>
               </nz-tab>
@@ -35,17 +36,17 @@
             <nz-dropdown [nzPlacement]="'bottomRight'">
               <a nz-dropdown>
                 admin
-                <i class="anticon anticon-down"></i>
+                <i nz-icon type="down"></i>
               </a>
               <ul nz-menu nzSelectable>
                 <li nz-menu-item>
                   <a>
-                    <i class="anticon anticon-setting"></i> 设置</a>
+                    <i nz-icon type="setting"></i> 设置</a>
                 </li>
                 <li nz-menu-divider></li>
                 <li nz-menu-item>
                   <a (click)="logout();">
-                    <i class="anticon anticon-logout"></i> 退出登录</a>
+                      <i nz-icon type="logout" theme="outline"></i>退出登录</a>
                 </li>
               </ul>
             </nz-dropdown>

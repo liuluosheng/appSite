@@ -69,14 +69,20 @@
         }
     }
 }
-
+.ant-layout-sider-collapsed{
+    .anticons {
+        [nz-icon]{
+            margin-right: 25px;
+        }
+    }
+}
 .anticons {
     height: 30px;
     text-align: right;
-    i {
+    [nz-icon] {
         color: #fff;
         font-size: 25px;
-        margin-right: 23px;
+        margin-right: 10px;
         opacity: .8;
         &:hover {
             opacity: 1;
@@ -91,12 +97,12 @@
     padding-top: @headerHeight;
     left: 0;
     background-color: #001529;
-    [nz-menu] .anticon {
+    [nz-menu] [nz-icon] {
         font-size: 20px;
     }
     &.ant-layout-sider-collapsed {
         [nz-menu] {
-            .anticon {
+            [nz-icon] {
                 font-size: 24px;
             }
             [nz-submenu] {

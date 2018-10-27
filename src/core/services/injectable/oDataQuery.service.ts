@@ -1,4 +1,3 @@
-import { ODataServiceFactory, ODataService, ODataPagedResult } from 'angular-odata-es5';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { first, switchMap } from 'rxjs/operators';
@@ -7,6 +6,8 @@ import { EntityBase } from 'src/shared/dto/EntityBase';
 import { Page } from '../../declare/page.class';
 import { Query } from 'ngx-odata-v4/objects/query';
 import { environment } from 'src/environments/environment';
+import { ODataService, ODataServiceFactory, ODataPagedResult } from 'angular-odata-es5';
+
 
 
 @Injectable()
@@ -39,16 +40,16 @@ class QueryService<T extends EntityBase> {
             .ExecWithCount();
     }
     public Create(item: T): Observable<T> {
-        return this.odata.Post(item);
+        return this.odata.Post(item).Exec();
     }
     public Update(item: T): Observable<T> {
-        return this.odata.Put<T>(item, item.Id);
+        return this.odata.Put<T>(item, item.Id).Exec();
     }
     public Delete(key: any): Observable<HttpResponse<T>> {
         return this.odata.Delete(key);
     }
     public UpdateByPatch(entity: any, key: any): Observable<HttpResponse<T>> {
-        return this.odata.Patch(entity, key);
+        return this.odata.Patch(entity, key).Exec();
     }
     public Query(filter?: string, top?: number) {
         return this.odata.Query().Filter(filter).Top(top).Exec();

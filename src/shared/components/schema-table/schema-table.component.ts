@@ -103,8 +103,8 @@ export class SchemaTableComponent implements OnInit, AfterContentInit {
       if (apply.length === 0) { return; }
       this.service.init(this.schemaType).UpdateByPatch(apply, item.Id).subscribe((data) => {
         const rowIndex = this.dataSet.findIndex((n) => n.Id === item.Id);
-        this.updateAutoComleteValue(data.body);
-        this.dataSet[rowIndex] = data.body;
+        this.updateAutoComleteValue(data);
+        this.dataSet[rowIndex] = data;
         this.visibleDrawer = false;
       });
     }

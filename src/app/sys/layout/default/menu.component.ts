@@ -5,12 +5,12 @@ import { SystemMenu } from 'src/shared/dto/SystemMenu';
 
 @Component({
     // tslint:disable-next-line:component-selector
-    selector: 'app-menu',
+    selector: '[app-menu]',
     template: `
     <ng-container *ngFor="let menu of menus">
         <li nz-menu-item (click)="navigate(menu)" *ngIf="menu.Items.length==0">
           <span>
-            <i class="anticon anticon-dashboard"></i>
+            <i nz-icon [type]="menu.Icon"></i>
             <span class="nav-text">
               {{menu.Name}}
             </span>
@@ -18,11 +18,10 @@ import { SystemMenu } from 'src/shared/dto/SystemMenu';
         </li>
         <li nz-submenu *ngIf="menu.Items.length!=0">
           <span title>
-            <i class="anticon anticon-user"></i>
+          <i nz-icon [type]="menu.Icon"></i>
             <span class="nav-text">{{menu.Name}}</span>
           </span>
-          <ul>
-          <app-menu [menus]="menu.Items" (select)="selectmenu($event)"></app-menu>
+          <ul app-menu [menus]="menu.Items" (select)="selectmenu($event)">
           </ul>
         </li>
 

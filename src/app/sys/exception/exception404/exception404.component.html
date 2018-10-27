@@ -15,7 +15,7 @@
 <div style="width:90%;margin:20px auto;" class="warp">
 
   <app-schema-table schemaType="product">
-    <app-table-action name="表格自定义" icon="anticon-delete" type="table" #action_b>
+    <app-table-action name="表格自定义" icon="delete" type="table" #action_b>
       <nz-drawer [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action_b.visible" nzTitle="自定义" (nzOnClose)="action_b.visible=false;">
         <div>自定义Action1</div>
         <div>{{action_b.data | json}}</div>
@@ -25,7 +25,7 @@
         </div>
       </nz-drawer>
     </app-table-action>
-    <app-table-action name="抽屉形式" icon="anticon-delete" #action>
+    <app-table-action name="抽屉形式" icon="delete" #action>
       <nz-drawer [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="action.visible" nzTitle="自定义" (nzOnClose)="action.visible=false;">
         <div>自定义Action1</div>
         <div>{{action.data | json}}</div>
@@ -35,7 +35,7 @@
         </div>
       </nz-drawer>
     </app-table-action>
-    <app-table-action name="弹框形式" icon="anticon-delete" #action_a>
+    <app-table-action name="弹框形式" icon="delete" #action_a>
       <nz-modal [(nzVisible)]="action_a.visible" nzTitle="The first Modal" (nzOnCancel)="action_a.visible=false">
         <p>Content one</p>
         <div>{{action_a.data | json}}</div>
